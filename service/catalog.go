@@ -89,23 +89,61 @@ func (s *CatalogService) DeleteBook(ctx context.Context, req *pb.ByIdReq) (*pb.E
 }
 
 func (s *CatalogService) CreateAuthor(ctx context.Context, req *pb.Author) (*pb.Author, error) {
-	return req, nil
+	id, err := uuid.NewV4()
+	if err != nil {
+		s.logger.Error("failed while generating uuid", l.Error(err))
+		return nil, status.Error(codes.Internal, "failed generate uuid")
+	}
+
+	req.AuthorId = id.String()
+
+	author, err := s.storage.Catalog().CreateAuthor(*req)
+	if err != nil {
+		s.logger.Error("failed to create author", l.Error(err))
+		return nil, status.Error(codes.Internal, "failed to create author")
+	}
+	return &author, nil
 }
 
 func (s *CatalogService) GetAuthor(ctx context.Context, req *pb.ByIdReq) (*pb.Author, error) {
-	return &pb.Author{}, nil
+	author, err := s.storage.Catalog().GetAuthor(req.GetId())
+  	if err != nil {
+    	s.logger.Error("failed to get author", l.Error(err))
+   	 	return nil, status.Error(codes.Internal, "failed to get author")
+  	}
+
+  	return &author, nil
 }
 
 func (s *CatalogService) ListAuthor(ctx context.Context, req *pb.ListReq) (*pb.ListRespAuthor, error) {
-	return &pb.ListRespAuthor{}, nil
+	authors, count, err := s.storage.Catalog().ListAuthor(req.Page, req.Limit)
+	if err != nil {
+	  	s.logger.Error("failed to list authors", l.Error(err))
+	  	return nil, status.Error(codes.Internal, "failed to list authors")
+	}
+  
+	return &pb.ListRespAuthor{
+	  	Authors: authors,
+	  	Count:   count,
+	}, nil
 }
 
 func (s *CatalogService) UpdateAuthor(ctx context.Context, req *pb.Author) (*pb.Author, error) {
-	return req, nil
+	author, err := s.storage.Catalog().UpdateAuthor(*req)
+  	if err != nil {
+    	s.logger.Error("failed to update author", l.Error(err))
+    	return nil, status.Error(codes.Internal, "failed to update author")
+  	}
+	return &author, nil
 }
 
 func (s *CatalogService) DeleteAuthor(ctx context.Context, req *pb.ByIdReq) (*pb.EmptyResp, error) {
-	return &pb.EmptyResp{}, nil
+	err := s.storage.Catalog().DeleteAuthor(req.Id)
+  	if err != nil {
+    	s.logger.Error("failed to delete author", l.Error(err))
+    	return nil, status.Error(codes.Internal, "failed to delete author")
+  	}
+  	return &pb.EmptyResp{}, nil
 }
 
 func (s *CatalogService) CreateCategory(ctx context.Context, req *pb.Category) (*pb.Category, error) {
