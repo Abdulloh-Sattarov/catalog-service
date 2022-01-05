@@ -40,3 +40,8 @@ insert into categories(category_id, name) values ('2bd05294-e4c5-46ba-a458-ba54c
 insert into authors(author_id, name) values ('b2a66341-4ef0-45bc-a00e-8f585dac788b', 'Steve Jobs');
 insert into books(book_id, name, author_id, price) values  ('80f05fc5-b7c0-4717-a888-a8f881c43520','Learning Swift','b2a66341-4ef0-45bc-a00e-8f585dac788b', 50000);
 insert into book_categories(book_id, category_id) values ('80f05fc5-b7c0-4717-a888-a8f881c43520', '2bd05294-e4c5-46ba-a458-ba54c799e4e3');
+
+insert into categories(category_id, name, parent_uuid) VALUES ('2bd05294-e4c5-46ba-a458-ba54c799e4e9', 'Textbook', '2bd05294-e4c5-46ba-a458-ba54c799e4e3');
+insert into categories(category_id, name, parent_uuid) VALUES ('5bd05294-e4c5-46ba-a458-ba54c799e4e4', 'Dictionary', '2bd05294-e4c5-46ba-a458-ba54c799e4e3');
+
+/* select cat.category_id, cat.name as category_name, cat2.name as parent_category from categories as cat left join categories as cat2 on cat.parent_uuid = cat2.category_id;

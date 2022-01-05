@@ -108,22 +108,61 @@ func (s *CatalogService) DeleteAuthor(ctx context.Context, req *pb.ByIdReq) (*pb
 }
 
 func (s *CatalogService) CreateCategory(ctx context.Context, req *pb.Category) (*pb.Category, error) {
-	return req, nil
+	id, err := uuid.NewV4()
+	if err != nil {
+		s.logger.Error("failed while generating uuid", l.Error(err))
+		return nil, status.Error(codes.Internal, "failed generate uuid")
+	}
+
+	req.CategoryId = id.String()
+
+	category, err := s.storage.Catalog().CreateCategory(*req)
+	if err != nil {
+		s.logger.Error("failed to create book", l.Error(err))
+		return nil, status.Error(codes.Internal, "failed to create book")
+	}
+
+	return &category, nil
 }
 
 func (s *CatalogService) GetCategory(ctx context.Context, req *pb.ByIdReq) (*pb.Category, error) {
-	return &pb.Category{}, nil
+	category, err := s.storage.Catalog().GetCategory(req.GetId())
+	if err != nil {
+		s.logger.Error("failed to get book", l.Error(err))
+		return nil, status.Error(codes.Internal, "failed to get book")
+	}
+	return &category, nil
 }
 
 func (s *CatalogService) ListCategory(ctx context.Context, req *pb.ListReq) (*pb.ListRespCategory, error) {
-	return &pb.ListRespCategory{}, nil
+	categories, count, err := s.storage.Catalog().ListCategory(req.Page, req.Limit)
+	if err != nil {
+		s.logger.Error("failed to list books", l.Error(err))
+		return nil, status.Error(codes.Internal, "failed to list books")
+	}
+
+	return &pb.ListRespCategory{
+		Categories: categories,
+		Count:      count,
+	}, nil
 }
 
 func (s *CatalogService) UpdateCategory(ctx context.Context, req *pb.Category) (*pb.Category, error) {
-	return req, nil
+	category, err := s.storage.Catalog().UpdateCategory(*req)
+	if err != nil {
+		s.logger.Error("failed to update book", l.Error(err))
+		return nil, status.Error(codes.Internal, "failed to update book")
+	}
+	return &category, nil
 }
 
 func (s *CatalogService) DeleteCategory(ctx context.Context, req *pb.ByIdReq) (*pb.EmptyResp, error) {
+	err := s.storage.Catalog().DeleteCategory(req.Id)
+	if err != nil {
+		s.logger.Error("failed to delete book", l.Error(err))
+		return nil, status.Error(codes.Internal, "failed to delete book")
+	}
+
 	return &pb.EmptyResp{}, nil
 }
 

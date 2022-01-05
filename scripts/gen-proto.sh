@@ -13,3 +13,4 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   else
     sed -i -e "s/,omitempty//g" $CURRENT_DIR/genproto/*.go
 fi
+

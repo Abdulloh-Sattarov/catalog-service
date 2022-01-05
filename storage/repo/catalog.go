@@ -11,4 +11,9 @@ type CatalogStorageI interface {
 	ListBook(page, limit int64) ([]*pb.Book, int64, error)
 	UpdateBook(update pb.Book) (pb.Book, error)
 	DeleteBook(id string) error
+	CreateCategory(category pb.Category) (pb.Category, error)
+	GetCategory(id string) (pb.Category, error)
+	ListCategory(page, limit int64) ([]*pb.Category, int64, error)
+	UpdateCategory(category pb.Category) (pb.Category, error)
+	DeleteCategory(id string) error
 }
