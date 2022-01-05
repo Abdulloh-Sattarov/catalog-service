@@ -16,3 +16,4 @@ for module in $(find $CURRENT_DIR/genproto/* -type d); do
     sed -i -e "s/,omitempty//g" $module/*.go
   fi
 done;
+

@@ -120,6 +120,39 @@ func (r *catalogRepo) DeleteBook(id string) error {
 	return nil
 }
 
+
+func (r *catalogRepo) CreateCategory(category pb.Category) (pb.Category, error) {
+	var id string
+	err := r.db.QueryRow(`
+		INSERT INTO categories(category_id, name, parent_uuid, created_at, updated_at) 
+		VALUES ($1, $2, $3, $4, $5) returning category_id`, category.CategoryId, category.Name, category.ParentUuid, time.Now().UTC(), time.Now().UTC()).Scan(&id)
+	if err != nil {
+		return pb.Category{}, err
+	}
+
+	newCategory, err := r.GetCategory(id)
+	if err != nil {
+		return pb.Category{}, err
+	}
+
+	return newCategory, nil
+}
+
+func (r *catalogRepo) GetCategory(id string) (pb.Category, error) {
+	var category pb.Category
+
+	err := r.db.QueryRow(`
+		SELECT category_id, name, parent_uuid, created_at, updated_at FROM categories 
+		WHERE category_id=$1 and deleted_at is null`, id).Scan(&category.CategoryId, &category.Name, &category.ParentUuid, &category.CreatedAt, &category.UpdatedAt)
+	if err != nil {
+		return pb.Category{}, err
+	}
+
+	return category, nil
+}
+
+
+
 func (r *catalogRepo) CreateAuthor(author pb.Author) (pb.Author, error) {
 	var id string
 
@@ -165,12 +198,8 @@ func (r *catalogRepo) ListAuthor(page, limit int64) ([]*pb.Author, int64, error)
 		return nil, 0, err
 	}
 
-	if err = rows.Err(); err != nil {
-		return nil, 0, err
-	}
-
 	var (
-		authors []*pb.Author
+    authors []*pb.Author
 		count   int64
 	)
 
@@ -184,11 +213,76 @@ func (r *catalogRepo) ListAuthor(page, limit int64) ([]*pb.Author, int64, error)
 	}
 
 	err = r.db.QueryRow("SELECT count(*) FROM authors WHERE deleted_at IS NULL").Scan(&count)
+  if err != nil {
+		return nil, 0, err
+	}
+  return authors, count, nil
+}
+  
+
+func (r *catalogRepo) ListCategory(page, limit int64) ([]*pb.Category, int64, error) {
+	offset := (page - 1) * limit
+	rows, err := r.db.Queryx(`SELECT category_id, name, parent_uuid, created_at, updated_at FROM categories WHERE deleted_at is null order by category_id LIMIT $1 OFFSET $2`,
+		limit, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+  
+  var(
+		categories []*pb.Category
+		count      int64
+	)
+
+	for rows.Next() {
+		var category pb.Category
+		err = rows.Scan(&category.CategoryId, &category.Name, &category.ParentUuid, &category.CreatedAt, &category.UpdatedAt)
+		if err != nil {
+			return nil, 0, err
+		}
+		categories = append(categories, &category)
+	}
+
+	err = r.db.QueryRow(`SELECT count(*) FROM categories where deleted_at is null`).Scan(&count)
+
 	if err != nil {
 		return nil, 0, err
 	}
 
-	return authors, count, nil
+	return categories, count, nil
+}
+
+func (r *catalogRepo) UpdateCategory(category pb.Category) (pb.Category, error) {
+	result, err := r.db.Exec(`UPDATE categories SET name=$1, parent_uuid=$2, updated_at = $3 WHERE category_id=$4 and deleted_at is null`,
+		category.Name, category.ParentUuid, time.Now().UTC(), category.CategoryId,
+	)
+	if err != nil {
+		return pb.Category{}, err
+	}
+	if i, _ := result.RowsAffected(); i == 0 {
+		return pb.Category{}, sql.ErrNoRows
+	}
+
+	var newCategory pb.Category
+
+	newCategory, err = r.GetCategory(category.CategoryId)
+	if err != nil {
+		return pb.Category{}, err
+	}
+
+	return newCategory, nil
+}
+
+func (r *catalogRepo) DeleteCategory(id string) error {
+	result, err := r.db.Exec(`UPDATE categories SET deleted_at = $1 WHERE category_id=$2`, time.Now().UTC(), id)
+  if err != nil {
+		  return err
+	}
+
+	if i, _ := result.RowsAffected(); i == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
 }
 
 func (r *catalogRepo) UpdateAuthor(update pb.Author) (pb.Author, error) {
@@ -221,5 +315,6 @@ func (r *catalogRepo) DeleteAuthor(id string) error {
 	if i, _ := result.RowsAffected(); i == 0 {
 		return sql.ErrNoRows
 	}
+
 	return nil
 }
