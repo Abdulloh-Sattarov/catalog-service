@@ -27,6 +27,13 @@ func (r *catalogRepo) CreateBook(book pb.Book) (pb.Book, error) {
 		return pb.Book{}, err
 	}
 
+	_, err = r.db.Exec(`
+        INSERT INTO book_categories(book_id, category_id)
+        VALUES ($1, $2)`, book.BookId, book.CategoryId)
+	if err != nil {
+		return pb.Book{}, err
+	}
+
 	var NewBook pb.Book
 
 	NewBook, err = r.GetBook(id)
@@ -43,6 +50,16 @@ func (r *catalogRepo) GetBook(id string) (pb.Book, error) {
 	err := r.db.QueryRow(`
         SELECT book_id, name, author_id, price, created_at, updated_at FROM books
         WHERE book_id=$1 and deleted_at is null`, id).Scan(&book.BookId, &book.Name, &book.AuthorId, &book.Price, &book.CreatedAt, &book.UpdatedAt)
+	if err != nil {
+		return pb.Book{}, err
+	}
+
+	err = r.db.QueryRow(`
+        select c.category_id, c.name
+			from book_categories
+		join books b on book_categories.book_id = b.book_id
+		join categories c on book_categories.category_id = c.category_id
+		where b.book_id = $1`, id).Scan(&book.CategoryId, &book.CategoryName)
 	if err != nil {
 		return pb.Book{}, err
 	}
@@ -73,6 +90,15 @@ func (r *catalogRepo) ListBook(page, limit int64) ([]*pb.Book, int64, error) {
 		if err != nil {
 			return nil, 0, err
 		}
+		err = r.db.QueryRow(`
+        select c.category_id, c.name
+			from book_categories
+		join books b on book_categories.book_id = b.book_id
+		join categories c on book_categories.category_id = c.category_id
+		where b.book_id = $1`, book.BookId).Scan(&book.CategoryId, &book.CategoryName)
+		if err != nil {
+			return nil, 0, err
+		}
 		books = append(books, &book)
 	}
 
@@ -93,6 +119,17 @@ func (r *catalogRepo) UpdateBook(book pb.Book) (pb.Book, error) {
 	}
 
 	if i, _ := result.RowsAffected(); i == 0 {
+		return pb.Book{}, sql.ErrNoRows
+	}
+
+	resultNext, err := r.db.Exec(`UPDATE book_categories SET category_id = $1 WHERE book_id=$2`,
+		book.CategoryId, book.BookId,
+	)
+	if err != nil {
+		return pb.Book{}, err
+	}
+
+	if i, _ := resultNext.RowsAffected(); i == 0 {
 		return pb.Book{}, sql.ErrNoRows
 	}
 
@@ -119,7 +156,6 @@ func (r *catalogRepo) DeleteBook(id string) error {
 
 	return nil
 }
-
 
 func (r *catalogRepo) CreateCategory(category pb.Category) (pb.Category, error) {
 	var id string
@@ -150,8 +186,6 @@ func (r *catalogRepo) GetCategory(id string) (pb.Category, error) {
 
 	return category, nil
 }
-
-
 
 func (r *catalogRepo) CreateAuthor(author pb.Author) (pb.Author, error) {
 	var id string
@@ -199,7 +233,7 @@ func (r *catalogRepo) ListAuthor(page, limit int64) ([]*pb.Author, int64, error)
 	}
 
 	var (
-    authors []*pb.Author
+		authors []*pb.Author
 		count   int64
 	)
 
@@ -213,12 +247,11 @@ func (r *catalogRepo) ListAuthor(page, limit int64) ([]*pb.Author, int64, error)
 	}
 
 	err = r.db.QueryRow("SELECT count(*) FROM authors WHERE deleted_at IS NULL").Scan(&count)
-  if err != nil {
+	if err != nil {
 		return nil, 0, err
 	}
-  return authors, count, nil
+	return authors, count, nil
 }
-  
 
 func (r *catalogRepo) ListCategory(page, limit int64) ([]*pb.Category, int64, error) {
 	offset := (page - 1) * limit
@@ -227,8 +260,8 @@ func (r *catalogRepo) ListCategory(page, limit int64) ([]*pb.Category, int64, er
 	if err != nil {
 		return nil, 0, err
 	}
-  
-  var(
+
+	var (
 		categories []*pb.Category
 		count      int64
 	)
@@ -274,8 +307,8 @@ func (r *catalogRepo) UpdateCategory(category pb.Category) (pb.Category, error) 
 
 func (r *catalogRepo) DeleteCategory(id string) error {
 	result, err := r.db.Exec(`UPDATE categories SET deleted_at = $1 WHERE category_id=$2`, time.Now().UTC(), id)
-  if err != nil {
-		  return err
+	if err != nil {
+		return err
 	}
 
 	if i, _ := result.RowsAffected(); i == 0 {
@@ -317,4 +350,84 @@ func (r *catalogRepo) DeleteAuthor(id string) error {
 	}
 
 	return nil
+}
+
+func (r *catalogRepo) List(page, limit int64) ([]*pb.Catalog, int64, error) {
+	offset := (page - 1) * limit
+	rows, err := r.db.Queryx(`
+		select
+			b.book_id,
+			b.name,
+			b.price,
+			b.created_at,
+			b.updated_at,
+			a.author_id,
+			a.name,
+			a.created_at,
+			a.updated_at 
+		from
+			book_categories
+		join books b on book_categories.book_id = b.book_id
+		join categories c on book_categories.category_id = c.category_id
+		join authors a on b.author_id = a.author_id
+		where b.deleted_at is null
+		LIMIT $1 OFFSET $2`,
+		limit, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var (
+		catalogs []*pb.Catalog
+		count    int64
+	)
+
+	_, count, _ = r.ListBook(1, 1)
+
+	for rows.Next() {
+		var catalog pb.Catalog
+		var book pb.Book
+		var author pb.Author
+		err = rows.Scan(
+			&book.BookId, &book.Name, &book.Price, &book.CreatedAt, &book.UpdatedAt,
+			&author.AuthorId, &author.Name, &author.CreatedAt, &author.UpdatedAt,
+		)
+		if err != nil {
+			return nil, 0, err
+		}
+
+		rowsCategory, err := r.db.Queryx(`
+			select
+				c.category_id,
+				c.name,
+				c.parent_uuid,
+				c.created_at,
+				c.updated_at
+			from
+				book_categories
+					join books b on book_categories.book_id = b.book_id
+					join categories c on book_categories.category_id = c.category_id
+			where b.deleted_at is null and b.book_id = $1`, book.BookId)
+		if err != nil {
+			return nil, 0, err
+		}
+
+		for rowsCategory.Next() {
+			var category pb.Category
+			err = rowsCategory.Scan(
+				&category.CategoryId, &category.Name, &category.ParentUuid, &category.CreatedAt, &category.UpdatedAt,
+			)
+			catalog.Category = append(catalog.Category, &category)
+		}
+
+		if err != nil {
+			return nil, 0, err
+		}
+
+		catalog.Book = &book
+		catalog.Author = &author
+		catalogs = append(catalogs, &catalog)
+	}
+
+	return catalogs, count, nil
 }
