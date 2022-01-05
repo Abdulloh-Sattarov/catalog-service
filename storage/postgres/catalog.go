@@ -6,7 +6,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	pb "github.com/abdullohsattorov/catalog-service/genproto"
+	pb "github.com/abdullohsattorov/catalog-service/genproto/catalog_service"
 )
 
 type catalogRepo struct {
