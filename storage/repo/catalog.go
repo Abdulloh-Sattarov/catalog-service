@@ -1,7 +1,7 @@
 package repo
 
 import (
-	pb "github.com/abdullohsattorov/catalog-service/genproto"
+	pb "github.com/abdullohsattorov/catalog-service/genproto/catalog_service"
 )
 
 // CatalogStorageI ...

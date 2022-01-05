@@ -2,12 +2,13 @@ package service
 
 import (
 	"context"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"github.com/gofrs/uuid"
 
-	pb "github.com/abdullohsattorov/catalog-service/genproto"
+	pb "github.com/abdullohsattorov/catalog-service/genproto/catalog_service"
 	l "github.com/abdullohsattorov/catalog-service/pkg/logger"
 	"github.com/abdullohsattorov/catalog-service/storage"
 )

@@ -1,15 +1,18 @@
 #!/bin/bash
-
 CURRENT_DIR=$(pwd)
 
-protoc -I /usr/local/include \
-       -I $GOPATH/src/github.com/gogo/protobuf/gogoproto \
-       -I $CURRENT_DIR/book-store-protos/ \
-        --gofast_out=plugins=grpc:$CURRENT_DIR/genproto/ \
-        $CURRENT_DIR/book-store-protos/*.proto;
+for module in $(find $CURRENT_DIR/book-store-protos/* -type d); do
+    protoc -I /usr/local/include \
+           -I $GOPATH/src/github.com/gogo/protobuf/gogoproto \
+           -I $CURRENT_DIR/book-store-protos/ \
+            --gofast_out=plugins=grpc:$CURRENT_DIR/genproto/ \
+            $module/*.proto;
+done;
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    sed -i "" -e "s/,omitempty//g" $CURRENT_DIR/genproto/*.go
+for module in $(find $CURRENT_DIR/genproto/* -type d); do
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i "" -e "s/,omitempty//g" $module/*.go
   else
-    sed -i -e "s/,omitempty//g" $CURRENT_DIR/genproto/*.go
-fi
+    sed -i -e "s/,omitempty//g" $module/*.go
+  fi
+done;

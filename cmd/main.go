@@ -4,7 +4,7 @@ import (
 	"net"
 
 	"github.com/abdullohsattorov/catalog-service/config"
-	pb "github.com/abdullohsattorov/catalog-service/genproto"
+	pb "github.com/abdullohsattorov/catalog-service/genproto/catalog_service"
 	"github.com/abdullohsattorov/catalog-service/pkg/db"
 	"github.com/abdullohsattorov/catalog-service/pkg/logger"
 	"github.com/abdullohsattorov/catalog-service/service"
