@@ -24,5 +24,5 @@ type CatalogStorageI interface {
 	UpdateAuthor(update pb.Author) (pb.Author, error)
 	DeleteAuthor(id string) error
 
-	List(page, limit int64) ([]*pb.Catalog, int64, error)
+	List(page, limit int64, filters map[string]string) ([]*pb.Catalog, int64, error)
 }
