@@ -205,8 +205,8 @@ func (s *CatalogService) DeleteCategory(ctx context.Context, req *pb.ByIdReq) (*
 	return &pb.EmptyResp{}, nil
 }
 
-func (s *CatalogService) List(ctx context.Context, req *pb.ListReq) (*pb.ListResp, error) {
-	catalogs, count, err := s.storage.Catalog().List(req.Page, req.Limit)
+func (s *CatalogService) List(ctx context.Context, req *pb.ListFilter) (*pb.ListResp, error) {
+	catalogs, count, err := s.storage.Catalog().List(req.Page, req.Limit, req.Filters)
 	if err != nil {
 		s.logger.Error("failed to list catalogs", l.Error(err))
 		return nil, status.Error(codes.Internal, "failed to list catalogs")

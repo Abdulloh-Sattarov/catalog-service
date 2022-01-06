@@ -9,6 +9,11 @@ github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
+# github.com/huandu/go-sqlbuilder v1.13.0
+## explicit
+github.com/huandu/go-sqlbuilder
+# github.com/huandu/xstrings v1.3.2
+github.com/huandu/xstrings
 # github.com/jmoiron/sqlx v1.3.4
 ## explicit
 github.com/jmoiron/sqlx
