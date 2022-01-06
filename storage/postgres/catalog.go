@@ -176,16 +176,30 @@ func (r *catalogRepo) CreateCategory(category pb.Category) (pb.Category, error) 
 
 func (r *catalogRepo) GetCategory(id string) (pb.Category, error) {
 	var category pb.Category
+	var (
+		parentUUID     sql.NullString
+		parentCategory sql.NullString
+	)
 
 	err := r.db.QueryRow(`
 		SELECT cat.category_id, cat.name AS category_name, cat.parent_uuid, cat2.name AS parent_category, cat.created_at, cat.updated_at
 		FROM categories AS cat 
 		LEFT JOIN categories AS cat2 ON cat.parent_uuid = cat2.category_id
 		WHERE cat.category_id=$1 AND deleted_at is null;
-		`, id).Scan(&category.CategoryId, &category.Name, &category.ParentUuid, &category.ParentCategory, &category.CreatedAt, &category.UpdatedAt)
+		`, id).Scan(&category.CategoryId, &category.Name, &parentUUID, &parentCategory, &category.CreatedAt, &category.UpdatedAt)
 	if err != nil {
 		return pb.Category{}, err
 	}
+
+	if !parentUUID.Valid {
+		parentUUID.String = ""
+	}
+	category.ParentUuid = parentUUID.String
+
+	if !parentCategory.Valid {
+		parentCategory.String = ""
+	}
+	category.ParentCategory = parentCategory.String
 
 	return category, nil
 }
@@ -207,13 +221,28 @@ func (r *catalogRepo) ListCategory(page, limit int64) ([]*pb.Category, int64, er
 		categories []*pb.Category
 		count      int64
 	)
-
+	var (
+		parentUUID     sql.NullString
+		parentCategory sql.NullString
+	)
 	for rows.Next() {
 		var category pb.Category
-		err = rows.Scan(&category.CategoryId, &category.Name, &category.ParentUuid, &category.ParentCategory, &category.CreatedAt, &category.UpdatedAt)
+
+		err = rows.Scan(&category.CategoryId, &category.Name, &parentUUID, &parentCategory, &category.CreatedAt, &category.UpdatedAt)
 		if err != nil {
 			return nil, 0, err
 		}
+
+		if !parentUUID.Valid {
+			parentUUID.String = ""
+		}
+		category.ParentUuid = parentUUID.String
+
+		if !parentCategory.Valid {
+			parentCategory.String = ""
+		}
+		category.ParentCategory = parentCategory.String
+
 		categories = append(categories, &category)
 	}
 
