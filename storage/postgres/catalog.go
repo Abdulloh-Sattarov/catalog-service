@@ -176,15 +176,117 @@ func (r *catalogRepo) CreateCategory(category pb.Category) (pb.Category, error) 
 
 func (r *catalogRepo) GetCategory(id string) (pb.Category, error) {
 	var category pb.Category
+	var (
+		parentUUID     sql.NullString
+		parentCategory sql.NullString
+	)
 
 	err := r.db.QueryRow(`
-		SELECT category_id, name, parent_uuid, created_at, updated_at FROM categories 
-		WHERE category_id=$1 and deleted_at is null`, id).Scan(&category.CategoryId, &category.Name, &category.ParentUuid, &category.CreatedAt, &category.UpdatedAt)
+		SELECT cat.category_id, cat.name AS category_name, cat.parent_uuid, cat2.name AS parent_category, cat.created_at, cat.updated_at
+		FROM categories AS cat 
+		LEFT JOIN categories AS cat2 ON cat.parent_uuid = cat2.category_id
+		WHERE cat.category_id=$1 AND deleted_at is null;
+		`, id).Scan(&category.CategoryId, &category.Name, &parentUUID, &parentCategory, &category.CreatedAt, &category.UpdatedAt)
 	if err != nil {
 		return pb.Category{}, err
 	}
 
+	if !parentUUID.Valid {
+		parentUUID.String = ""
+	}
+	category.ParentUuid = parentUUID.String
+
+	if !parentCategory.Valid {
+		parentCategory.String = ""
+	}
+	category.ParentCategory = parentCategory.String
+
 	return category, nil
+}
+
+func (r *catalogRepo) ListCategory(page, limit int64) ([]*pb.Category, int64, error) {
+	offset := (page - 1) * limit
+	rows, err := r.db.Queryx(`
+		SELECT cat.category_id, cat.name AS category_name, cat.parent_uuid, cat2.name AS parent_category, cat.created_at, cat.updated_at
+		FROM categories AS cat 
+		LEFT JOIN categories AS cat2 ON cat.parent_uuid = cat2.category_id
+		WHERE deleted_at is null 
+		ORDER BY category_id LIMIT $1 OFFSET $2`,
+		limit, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var (
+		categories []*pb.Category
+		count      int64
+	)
+	var (
+		parentUUID     sql.NullString
+		parentCategory sql.NullString
+	)
+	for rows.Next() {
+		var category pb.Category
+
+		err = rows.Scan(&category.CategoryId, &category.Name, &parentUUID, &parentCategory, &category.CreatedAt, &category.UpdatedAt)
+		if err != nil {
+			return nil, 0, err
+		}
+
+		if !parentUUID.Valid {
+			parentUUID.String = ""
+		}
+		category.ParentUuid = parentUUID.String
+
+		if !parentCategory.Valid {
+			parentCategory.String = ""
+		}
+		category.ParentCategory = parentCategory.String
+
+		categories = append(categories, &category)
+	}
+
+	err = r.db.QueryRow(`SELECT count(*) FROM categories where deleted_at is null`).Scan(&count)
+
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return categories, count, nil
+}
+
+func (r *catalogRepo) UpdateCategory(category pb.Category) (pb.Category, error) {
+	result, err := r.db.Exec(`UPDATE categories SET name=$1, parent_uuid=$2, updated_at = $3 WHERE category_id=$4 and deleted_at is null`,
+		category.Name, category.ParentUuid, time.Now().UTC(), category.CategoryId,
+	)
+	if err != nil {
+		return pb.Category{}, err
+	}
+	if i, _ := result.RowsAffected(); i == 0 {
+		return pb.Category{}, sql.ErrNoRows
+	}
+
+	var newCategory pb.Category
+
+	newCategory, err = r.GetCategory(category.CategoryId)
+	if err != nil {
+		return pb.Category{}, err
+	}
+
+	return newCategory, nil
+}
+
+func (r *catalogRepo) DeleteCategory(id string) error {
+	result, err := r.db.Exec(`UPDATE categories SET deleted_at = $1 WHERE category_id=$2`, time.Now().UTC(), id)
+	if err != nil {
+		return err
+	}
+
+	if i, _ := result.RowsAffected(); i == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
 }
 
 func (r *catalogRepo) CreateAuthor(author pb.Author) (pb.Author, error) {
@@ -251,71 +353,6 @@ func (r *catalogRepo) ListAuthor(page, limit int64) ([]*pb.Author, int64, error)
 		return nil, 0, err
 	}
 	return authors, count, nil
-}
-
-func (r *catalogRepo) ListCategory(page, limit int64) ([]*pb.Category, int64, error) {
-	offset := (page - 1) * limit
-	rows, err := r.db.Queryx(`SELECT category_id, name, parent_uuid, created_at, updated_at FROM categories WHERE deleted_at is null order by category_id LIMIT $1 OFFSET $2`,
-		limit, offset)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	var (
-		categories []*pb.Category
-		count      int64
-	)
-
-	for rows.Next() {
-		var category pb.Category
-		err = rows.Scan(&category.CategoryId, &category.Name, &category.ParentUuid, &category.CreatedAt, &category.UpdatedAt)
-		if err != nil {
-			return nil, 0, err
-		}
-		categories = append(categories, &category)
-	}
-
-	err = r.db.QueryRow(`SELECT count(*) FROM categories where deleted_at is null`).Scan(&count)
-
-	if err != nil {
-		return nil, 0, err
-	}
-
-	return categories, count, nil
-}
-
-func (r *catalogRepo) UpdateCategory(category pb.Category) (pb.Category, error) {
-	result, err := r.db.Exec(`UPDATE categories SET name=$1, parent_uuid=$2, updated_at = $3 WHERE category_id=$4 and deleted_at is null`,
-		category.Name, category.ParentUuid, time.Now().UTC(), category.CategoryId,
-	)
-	if err != nil {
-		return pb.Category{}, err
-	}
-	if i, _ := result.RowsAffected(); i == 0 {
-		return pb.Category{}, sql.ErrNoRows
-	}
-
-	var newCategory pb.Category
-
-	newCategory, err = r.GetCategory(category.CategoryId)
-	if err != nil {
-		return pb.Category{}, err
-	}
-
-	return newCategory, nil
-}
-
-func (r *catalogRepo) DeleteCategory(id string) error {
-	result, err := r.db.Exec(`UPDATE categories SET deleted_at = $1 WHERE category_id=$2`, time.Now().UTC(), id)
-	if err != nil {
-		return err
-	}
-
-	if i, _ := result.RowsAffected(); i == 0 {
-		return sql.ErrNoRows
-	}
-
-	return nil
 }
 
 func (r *catalogRepo) UpdateAuthor(update pb.Author) (pb.Author, error) {
