@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 
 	sqlbuilder "github.com/huandu/go-sqlbuilder"
@@ -171,7 +172,7 @@ func (r *catalogRepo) CreateCategory(category pb.Category) (pb.Category, error) 
 	} else {
 		err := r.db.QueryRow(`
 		INSERT INTO categories(category_id, name, created_at, updated_at) 
-		VALUES ($1, $2, $3, $4, $5) returning category_id`, category.CategoryId, category.Name, time.Now().UTC(), time.Now().UTC()).Scan(&id)
+		VALUES ($1, $2, $3, $4) returning category_id`, category.CategoryId, category.Name, time.Now().UTC(), time.Now().UTC()).Scan(&id)
 		if err != nil {
 			return pb.Category{}, err
 		}
@@ -221,7 +222,7 @@ func (r *catalogRepo) ListCategory(page, limit int64) ([]*pb.Category, int64, er
 		SELECT cat.category_id, cat.name AS category_name, cat.parent_uuid, cat2.name AS parent_category, cat.created_at, cat.updated_at
 		FROM categories AS cat 
 		LEFT JOIN categories AS cat2 ON cat.parent_uuid = cat2.category_id
-		WHERE deleted_at is null 
+		WHERE cat.deleted_at is null 
 		ORDER BY category_id LIMIT $1 OFFSET $2`,
 		limit, offset)
 	if err != nil {
@@ -267,19 +268,31 @@ func (r *catalogRepo) ListCategory(page, limit int64) ([]*pb.Category, int64, er
 }
 
 func (r *catalogRepo) UpdateCategory(category pb.Category) (pb.Category, error) {
-	result, err := r.db.Exec(`UPDATE categories SET name=$1, parent_uuid=$2, updated_at = $3 WHERE category_id=$4 and deleted_at is null`,
-		category.Name, category.ParentUuid, time.Now().UTC(), category.CategoryId,
-	)
-	if err != nil {
-		return pb.Category{}, err
-	}
-	if i, _ := result.RowsAffected(); i == 0 {
-		return pb.Category{}, sql.ErrNoRows
+	if category.ParentUuid != "" {
+		result, err := r.db.Exec(`UPDATE categories SET name=$1, parent_uuid=$2, updated_at = $3 WHERE category_id=$4 and deleted_at is null`,
+			category.Name, category.ParentUuid, time.Now().UTC(), category.CategoryId,
+		)
+		if err != nil {
+			return pb.Category{}, err
+		}
+		if i, _ := result.RowsAffected(); i == 0 {
+			return pb.Category{}, sql.ErrNoRows
+		}
+	} else {
+		result, err := r.db.Exec(`UPDATE categories SET name=$1, parent_uuid=null, updated_at = $2 WHERE category_id=$3 and deleted_at is null`,
+			category.Name, time.Now().UTC(), category.CategoryId,
+		)
+		if err != nil {
+			return pb.Category{}, err
+		}
+		if i, _ := result.RowsAffected(); i == 0 {
+			return pb.Category{}, sql.ErrNoRows
+		}
 	}
 
 	var newCategory pb.Category
 
-	newCategory, err = r.GetCategory(category.CategoryId)
+	newCategory, err := r.GetCategory(category.CategoryId)
 	if err != nil {
 		return pb.Category{}, err
 	}
@@ -288,6 +301,17 @@ func (r *catalogRepo) UpdateCategory(category pb.Category) (pb.Category, error) 
 }
 
 func (r *catalogRepo) DeleteCategory(id string) error {
+	var count int
+	err := r.db.QueryRow(`select count(*) from categories where parent_uuid=$1 `, id).Scan(&count)
+	if err != nil {
+		return err
+	}
+
+	if count > 0 {
+		err1 := errors.New("this category has subcategories")
+		return err1
+	}
+
 	result, err := r.db.Exec(`UPDATE categories SET deleted_at = $1 WHERE category_id=$2`, time.Now().UTC(), id)
 	if err != nil {
 		return err
