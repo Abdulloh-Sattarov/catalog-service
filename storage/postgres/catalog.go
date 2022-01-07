@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/huandu/go-sqlbuilder"
+	sqlbuilder "github.com/huandu/go-sqlbuilder"
 	"github.com/jmoiron/sqlx"
 
 	pb "github.com/abdullohsattorov/catalog-service/genproto/catalog_service"
@@ -187,7 +187,7 @@ func (r *catalogRepo) GetCategory(id string) (pb.Category, error) {
 		SELECT cat.category_id, cat.name AS category_name, cat.parent_uuid, cat2.name AS parent_category, cat.created_at, cat.updated_at
 		FROM categories AS cat 
 		LEFT JOIN categories AS cat2 ON cat.parent_uuid = cat2.category_id
-		WHERE cat.category_id=$1 AND deleted_at is null;
+		WHERE cat.category_id=$1 AND cat.deleted_at is null;
 		`, id).Scan(&category.CategoryId, &category.Name, &parentUUID, &parentCategory, &category.CreatedAt, &category.UpdatedAt)
 	if err != nil {
 		return pb.Category{}, err
