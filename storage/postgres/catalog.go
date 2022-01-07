@@ -3,7 +3,6 @@ package postgres
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"time"
 
 	sqlbuilder "github.com/huandu/go-sqlbuilder"
@@ -105,8 +104,6 @@ func (r *catalogRepo) ListBook(page, limit int64) ([]*pb.Book, int64, error) {
 		}
 		books = append(books, &book)
 	}
-
-	fmt.Println(books)
 
 	err = r.db.QueryRow(`SELECT count(*) FROM books where deleted_at is null`).Scan(&count)
 	if err != nil {
@@ -497,12 +494,19 @@ func (r *catalogRepo) List(page, limit int64, filters map[string]string) ([]*pb.
 
 		for rowsCategory.Next() {
 			var category pb.Category
+			var parentUUID sql.NullString
 			err = rowsCategory.Scan(
-				&category.CategoryId, &category.Name, &category.ParentUuid, &category.CreatedAt, &category.UpdatedAt,
+				&category.CategoryId, &category.Name, &parentUUID, &category.CreatedAt, &category.UpdatedAt,
 			)
 			if err != nil {
 				return nil, 0, err
 			}
+
+			if !parentUUID.Valid {
+				parentUUID.String = ""
+			}
+			category.ParentUuid = parentUUID.String
+
 			book.CategoryId = category.CategoryId
 			book.CategoryName = category.Name
 			result, _ := r.GetCategory(category.CategoryId)
