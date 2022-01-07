@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -154,7 +153,6 @@ func (s *CatalogService) CreateCategory(ctx context.Context, req *pb.Category) (
 	}
 
 	req.CategoryId = id.String()
-
 	category, err := s.storage.Catalog().CreateCategory(*req)
 	if err != nil {
 		s.logger.Error("failed to create category", l.Error(err))
