@@ -3,6 +3,7 @@ package postgres
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
 	sqlbuilder "github.com/huandu/go-sqlbuilder"
@@ -104,6 +105,8 @@ func (r *catalogRepo) ListBook(page, limit int64) ([]*pb.Book, int64, error) {
 		}
 		books = append(books, &book)
 	}
+
+	fmt.Println(books)
 
 	err = r.db.QueryRow(`SELECT count(*) FROM books where deleted_at is null`).Scan(&count)
 	if err != nil {
@@ -424,90 +427,6 @@ func (r *catalogRepo) DeleteAuthor(id string) error {
 	return nil
 }
 
-//func (r *catalogRepo) List(page, limit int64, filters map[string]string) ([]*pb.Catalog, int64, error) {
-//	offset := (page - 1) * limit
-//	var args string
-//	if value, ok := filters["authors"]; ok {
-//		args = value
-//	}
-//	rows, err := r.db.Queryx(`
-//		select
-//			b.book_id,
-//			b.name,
-//			b.price,
-//			b.created_at,
-//			b.updated_at,
-//			a.author_id,
-//			a.name,
-//			a.created_at,
-//			a.updated_at
-//		from
-//			book_categories
-//		join books b on book_categories.book_id = b.book_id
-//		join categories c on book_categories.category_id = c.category_id
-//		join authors a on b.author_id = a.author_id
-//		where b.deleted_at is null and b.author_id in ($1)
-//		LIMIT $2 OFFSET $3`,
-//		args, limit, offset)
-//	if err != nil {
-//		return nil, 0, err
-//	}
-//
-//	var (
-//		catalogs []*pb.Catalog
-//		count    int64
-//	)
-//
-//	_, count, _ = r.ListBook(1, 1)
-//
-//	for rows.Next() {
-//		var catalog pb.Catalog
-//		var book pb.Book
-//		var author pb.Author
-//		err = rows.Scan(
-//			&book.BookId, &book.Name, &book.Price, &book.CreatedAt, &book.UpdatedAt,
-//			&author.AuthorId, &author.Name, &author.CreatedAt, &author.UpdatedAt,
-//		)
-//		if err != nil {
-//			return nil, 0, err
-//		}
-//
-//		rowsCategory, err := r.db.Queryx(`
-//			select
-//				c.category_id,
-//				c.name,
-//				c.parent_uuid,
-//				c.created_at,
-//				c.updated_at
-//			from
-//				book_categories
-//					join books b on book_categories.book_id = b.book_id
-//					join categories c on book_categories.category_id = c.category_id
-//			where b.deleted_at is null and b.book_id = $1`, book.BookId)
-//		if err != nil {
-//			return nil, 0, err
-//		}
-//
-//		for rowsCategory.Next() {
-//			var category pb.Category
-//			err = rowsCategory.Scan(
-//				&category.CategoryId, &category.Name, &category.ParentUuid, &category.CreatedAt, &category.UpdatedAt,
-//			)
-//			catalog.Category = append(catalog.Category, &category)
-//		}
-//
-//		if err != nil {
-//			return nil, 0, err
-//		}
-//
-//		catalog.Book = &book
-//		catalog.Author = &author
-//		catalogs = append(catalogs, &catalog)
-//	}
-//
-//	return catalogs, count, nil
-//}
-
 func (r *catalogRepo) List(page, limit int64, filters map[string]string) ([]*pb.Catalog, int64, error) {
 	offset := (page - 1) * limit
 	sb := sqlbuilder.NewSelectBuilder()
@@ -574,6 +493,8 @@ func (r *catalogRepo) List(page, limit int64, filters map[string]string) ([]*pb.
 			return nil, 0, err
 		}
 
+		_, count, _ = r.ListBook(1, 1)
+
 		for rowsCategory.Next() {
 			var category pb.Category
 			err = rowsCategory.Scan(
@@ -582,8 +503,14 @@ func (r *catalogRepo) List(page, limit int64, filters map[string]string) ([]*pb.
 			if err != nil {
 				return nil, 0, err
 			}
+			book.CategoryId = category.CategoryId
+			book.CategoryName = category.Name
+			result, _ := r.GetCategory(category.CategoryId)
+			category.ParentCategory = result.ParentCategory
 			catalog.Category = append(catalog.Category, &category)
 		}
+
+		book.AuthorId = author.AuthorId
 
 		catalog.Book = &book
 		catalog.Author = &author
