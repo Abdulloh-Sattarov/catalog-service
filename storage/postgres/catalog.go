@@ -161,11 +161,20 @@ func (r *catalogRepo) DeleteBook(id string) error {
 
 func (r *catalogRepo) CreateCategory(category pb.Category) (pb.Category, error) {
 	var id string
-	err := r.db.QueryRow(`
+	if category.ParentUuid != "" {
+		err := r.db.QueryRow(`
 		INSERT INTO categories(category_id, name, parent_uuid, created_at, updated_at) 
 		VALUES ($1, $2, $3, $4, $5) returning category_id`, category.CategoryId, category.Name, category.ParentUuid, time.Now().UTC(), time.Now().UTC()).Scan(&id)
-	if err != nil {
-		return pb.Category{}, err
+		if err != nil {
+			return pb.Category{}, err
+		}
+	} else {
+		err := r.db.QueryRow(`
+		INSERT INTO categories(category_id, name, created_at, updated_at) 
+		VALUES ($1, $2, $3, $4, $5) returning category_id`, category.CategoryId, category.Name, time.Now().UTC(), time.Now().UTC()).Scan(&id)
+		if err != nil {
+			return pb.Category{}, err
+		}
 	}
 
 	newCategory, err := r.GetCategory(id)
