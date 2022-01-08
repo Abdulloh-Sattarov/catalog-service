@@ -66,69 +66,6 @@ func (m *EmptyResp) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_EmptyResp proto.InternalMessageInfo
 
-type ListFilter struct {
-	Page                 int64             `protobuf:"varint,1,opt,name=Page,proto3" json:"Page"`
-	Limit                int64             `protobuf:"varint,2,opt,name=Limit,proto3" json:"Limit"`
-	Filters              map[string]string `protobuf:"bytes,3,rep,name=Filters,proto3" json:"Filters" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
-	XXX_unrecognized     []byte            `json:"-"`
-	XXX_sizecache        int32             `json:"-"`
-}
-
-func (m *ListFilter) Reset()         { *m = ListFilter{} }
-func (m *ListFilter) String() string { return proto.CompactTextString(m) }
-func (*ListFilter) ProtoMessage()    {}
-func (*ListFilter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c399380aa4c6c40a, []int{1}
-}
-func (m *ListFilter) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *ListFilter) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_ListFilter.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *ListFilter) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ListFilter.Merge(m, src)
-}
-func (m *ListFilter) XXX_Size() int {
-	return m.Size()
-}
-func (m *ListFilter) XXX_DiscardUnknown() {
-	xxx_messageInfo_ListFilter.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ListFilter proto.InternalMessageInfo
-
-func (m *ListFilter) GetPage() int64 {
-	if m != nil {
-		return m.Page
-	}
-	return 0
-}
-
-func (m *ListFilter) GetLimit() int64 {
-	if m != nil {
-		return m.Limit
-	}
-	return 0
-}
-
-func (m *ListFilter) GetFilters() map[string]string {
-	if m != nil {
-		return m.Filters
-	}
-	return nil
-}
-
 type ListReq struct {
 	Page                 int64    `protobuf:"varint,1,opt,name=Page,proto3" json:"Page"`
 	Limit                int64    `protobuf:"varint,2,opt,name=Limit,proto3" json:"Limit"`
@@ -141,7 +78,7 @@ func (m *ListReq) Reset()         { *m = ListReq{} }
 func (m *ListReq) String() string { return proto.CompactTextString(m) }
 func (*ListReq) ProtoMessage()    {}
 func (*ListReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c399380aa4c6c40a, []int{2}
+	return fileDescriptor_c399380aa4c6c40a, []int{1}
 }
 func (m *ListReq) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -184,26 +121,27 @@ func (m *ListReq) GetLimit() int64 {
 	return 0
 }
 
-type ListResp struct {
-	Catalogs             []*Catalog `protobuf:"bytes,1,rep,name=Catalogs,proto3" json:"Catalogs"`
-	Count                int64      `protobuf:"varint,2,opt,name=Count,proto3" json:"Count"`
-	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
-	XXX_unrecognized     []byte     `json:"-"`
-	XXX_sizecache        int32      `json:"-"`
+type ListBookReq struct {
+	Page                 int64             `protobuf:"varint,1,opt,name=Page,proto3" json:"Page"`
+	Limit                int64             `protobuf:"varint,2,opt,name=Limit,proto3" json:"Limit"`
+	Filters              map[string]string `protobuf:"bytes,3,rep,name=Filters,proto3" json:"Filters" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
+	XXX_unrecognized     []byte            `json:"-"`
+	XXX_sizecache        int32             `json:"-"`
 }
 
-func (m *ListResp) Reset()         { *m = ListResp{} }
-func (m *ListResp) String() string { return proto.CompactTextString(m) }
-func (*ListResp) ProtoMessage()    {}
-func (*ListResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c399380aa4c6c40a, []int{3}
+func (m *ListBookReq) Reset()         { *m = ListBookReq{} }
+func (m *ListBookReq) String() string { return proto.CompactTextString(m) }
+func (*ListBookReq) ProtoMessage()    {}
+func (*ListBookReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c399380aa4c6c40a, []int{2}
 }
-func (m *ListResp) XXX_Unmarshal(b []byte) error {
+func (m *ListBookReq) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ListResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *ListBookReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ListResp.Marshal(b, m, deterministic)
+		return xxx_messageInfo_ListBookReq.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -213,30 +151,37 @@ func (m *ListResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-func (m *ListResp) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ListResp.Merge(m, src)
+func (m *ListBookReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListBookReq.Merge(m, src)
 }
-func (m *ListResp) XXX_Size() int {
+func (m *ListBookReq) XXX_Size() int {
 	return m.Size()
 }
-func (m *ListResp) XXX_DiscardUnknown() {
-	xxx_messageInfo_ListResp.DiscardUnknown(m)
+func (m *ListBookReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListBookReq.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ListResp proto.InternalMessageInfo
+var xxx_messageInfo_ListBookReq proto.InternalMessageInfo
 
-func (m *ListResp) GetCatalogs() []*Catalog {
+func (m *ListBookReq) GetPage() int64 {
 	if m != nil {
-		return m.Catalogs
-	}
-	return nil
-}
-
-func (m *ListResp) GetCount() int64 {
-	if m != nil {
-		return m.Count
+		return m.Page
 	}
 	return 0
+}
+
+func (m *ListBookReq) GetLimit() int64 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *ListBookReq) GetFilters() map[string]string {
+	if m != nil {
+		return m.Filters
+	}
+	return nil
 }
 
 type ListRespCategory struct {
@@ -251,7 +196,7 @@ func (m *ListRespCategory) Reset()         { *m = ListRespCategory{} }
 func (m *ListRespCategory) String() string { return proto.CompactTextString(m) }
 func (*ListRespCategory) ProtoMessage()    {}
 func (*ListRespCategory) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c399380aa4c6c40a, []int{4}
+	return fileDescriptor_c399380aa4c6c40a, []int{3}
 }
 func (m *ListRespCategory) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -306,7 +251,7 @@ func (m *ListRespAuthor) Reset()         { *m = ListRespAuthor{} }
 func (m *ListRespAuthor) String() string { return proto.CompactTextString(m) }
 func (*ListRespAuthor) ProtoMessage()    {}
 func (*ListRespAuthor) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c399380aa4c6c40a, []int{5}
+	return fileDescriptor_c399380aa4c6c40a, []int{4}
 }
 func (m *ListRespAuthor) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -361,7 +306,7 @@ func (m *ListRespBook) Reset()         { *m = ListRespBook{} }
 func (m *ListRespBook) String() string { return proto.CompactTextString(m) }
 func (*ListRespBook) ProtoMessage()    {}
 func (*ListRespBook) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c399380aa4c6c40a, []int{6}
+	return fileDescriptor_c399380aa4c6c40a, []int{5}
 }
 func (m *ListRespBook) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -415,7 +360,7 @@ func (m *ByIdReq) Reset()         { *m = ByIdReq{} }
 func (m *ByIdReq) String() string { return proto.CompactTextString(m) }
 func (*ByIdReq) ProtoMessage()    {}
 func (*ByIdReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c399380aa4c6c40a, []int{7}
+	return fileDescriptor_c399380aa4c6c40a, []int{6}
 }
 func (m *ByIdReq) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -464,7 +409,7 @@ func (m *Catalog) Reset()         { *m = Catalog{} }
 func (m *Catalog) String() string { return proto.CompactTextString(m) }
 func (*Catalog) ProtoMessage()    {}
 func (*Catalog) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c399380aa4c6c40a, []int{8}
+	return fileDescriptor_c399380aa4c6c40a, []int{7}
 }
 func (m *Catalog) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -530,7 +475,7 @@ func (m *Category) Reset()         { *m = Category{} }
 func (m *Category) String() string { return proto.CompactTextString(m) }
 func (*Category) ProtoMessage()    {}
 func (*Category) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c399380aa4c6c40a, []int{9}
+	return fileDescriptor_c399380aa4c6c40a, []int{8}
 }
 func (m *Category) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -615,7 +560,7 @@ func (m *Author) Reset()         { *m = Author{} }
 func (m *Author) String() string { return proto.CompactTextString(m) }
 func (*Author) ProtoMessage()    {}
 func (*Author) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c399380aa4c6c40a, []int{10}
+	return fileDescriptor_c399380aa4c6c40a, []int{9}
 }
 func (m *Author) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -690,7 +635,7 @@ func (m *Book) Reset()         { *m = Book{} }
 func (m *Book) String() string { return proto.CompactTextString(m) }
 func (*Book) ProtoMessage()    {}
 func (*Book) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c399380aa4c6c40a, []int{11}
+	return fileDescriptor_c399380aa4c6c40a, []int{10}
 }
 func (m *Book) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -777,10 +722,9 @@ func (m *Book) GetUpdatedAt() string {
 
 func init() {
 	proto.RegisterType((*EmptyResp)(nil), "catalog.EmptyResp")
-	proto.RegisterType((*ListFilter)(nil), "catalog.ListFilter")
-	proto.RegisterMapType((map[string]string)(nil), "catalog.ListFilter.FiltersEntry")
 	proto.RegisterType((*ListReq)(nil), "catalog.ListReq")
-	proto.RegisterType((*ListResp)(nil), "catalog.ListResp")
+	proto.RegisterType((*ListBookReq)(nil), "catalog.ListBookReq")
+	proto.RegisterMapType((map[string]string)(nil), "catalog.ListBookReq.FiltersEntry")
 	proto.RegisterType((*ListRespCategory)(nil), "catalog.ListRespCategory")
 	proto.RegisterType((*ListRespAuthor)(nil), "catalog.ListRespAuthor")
 	proto.RegisterType((*ListRespBook)(nil), "catalog.ListRespBook")
@@ -794,53 +738,52 @@ func init() {
 func init() { proto.RegisterFile("catalog_service/catalog.proto", fileDescriptor_c399380aa4c6c40a) }
 
 var fileDescriptor_c399380aa4c6c40a = []byte{
-	// 736 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x56, 0xcf, 0x6e, 0xd3, 0x4e,
-	0x10, 0xfe, 0x39, 0x4e, 0xe2, 0x64, 0x9a, 0x9f, 0x09, 0x43, 0x81, 0x34, 0x82, 0xa8, 0x18, 0x09,
-	0x0a, 0x82, 0x00, 0x29, 0x2a, 0xa8, 0x9c, 0xda, 0x50, 0xaa, 0x48, 0x55, 0x55, 0x8c, 0x7a, 0xe2,
-	0x80, 0x4c, 0xb3, 0x2a, 0x56, 0xd3, 0x3a, 0x38, 0x9b, 0x4a, 0xb9, 0xf3, 0x10, 0x3c, 0x05, 0x0f,
-	0xc1, 0x09, 0x6e, 0x3c, 0x02, 0x2a, 0x3c, 0x08, 0xda, 0x9d, 0xdd, 0x8d, 0x63, 0x3b, 0x55, 0x7b,
-	0xca, 0xce, 0x9f, 0xef, 0x9b, 0x6f, 0x77, 0xa6, 0xe3, 0xc2, 0xed, 0x83, 0x80, 0x07, 0x83, 0xe8,
-	0xf0, 0xc3, 0x88, 0xc5, 0xa7, 0xe1, 0x01, 0x7b, 0xa2, 0xec, 0xf6, 0x30, 0x8e, 0x78, 0x84, 0x8e,
-	0x32, 0xbd, 0x05, 0xa8, 0x6e, 0x1d, 0x0f, 0xf9, 0xc4, 0x67, 0xa3, 0xa1, 0xf7, 0xcd, 0x02, 0xd8,
-	0x09, 0x47, 0xfc, 0x4d, 0x38, 0xe0, 0x2c, 0x46, 0x84, 0xe2, 0x5e, 0x70, 0xc8, 0x1a, 0xd6, 0xb2,
-	0xb5, 0x62, 0xfb, 0xf2, 0x8c, 0x8b, 0x50, 0xda, 0x09, 0x8f, 0x43, 0xde, 0x28, 0x48, 0x27, 0x19,
-	0xb8, 0x0e, 0x0e, 0x61, 0x46, 0x0d, 0x7b, 0xd9, 0x5e, 0x59, 0xe8, 0x2c, 0xb7, 0x75, 0xbd, 0x29,
-	0x5f, 0x5b, 0xa5, 0x6c, 0x9d, 0xf0, 0x78, 0xe2, 0x6b, 0x40, 0x73, 0x1d, 0x6a, 0xc9, 0x00, 0xd6,
-	0xc1, 0x3e, 0x62, 0x13, 0x59, 0xb4, 0xea, 0x8b, 0xa3, 0xa8, 0x79, 0x1a, 0x0c, 0xc6, 0x4c, 0xd6,
-	0xac, 0xfa, 0x64, 0xac, 0x17, 0x5e, 0x5a, 0xde, 0x2a, 0x38, 0x82, 0xdf, 0x67, 0x9f, 0x2f, 0x2e,
-	0xd6, 0xdb, 0x85, 0x0a, 0x81, 0x46, 0x43, 0x7c, 0x04, 0x95, 0x2e, 0x09, 0x1d, 0x35, 0x2c, 0xa9,
-	0xbc, 0x6e, 0x94, 0xab, 0x80, 0x6f, 0x32, 0x04, 0x5f, 0x37, 0x1a, 0x9f, 0x18, 0x3e, 0x69, 0x78,
-	0xef, 0xa1, 0xae, 0xf9, 0xba, 0x01, 0x67, 0x87, 0x51, 0x3c, 0xc1, 0x67, 0x00, 0xea, 0x1c, 0x32,
-	0xcd, 0x7c, 0x35, 0xc9, 0x2c, 0xd3, 0xfc, 0x44, 0xd2, 0x1c, 0xf2, 0xb7, 0xe0, 0x6a, 0xf2, 0x8d,
-	0x31, 0xff, 0x14, 0xc5, 0xf8, 0x00, 0x1c, 0x3a, 0x69, 0xde, 0x2b, 0x86, 0x97, 0xfc, 0xbe, 0x8e,
-	0xcf, 0xa1, 0xec, 0x41, 0x4d, 0x53, 0x6e, 0x46, 0xd1, 0x11, 0xde, 0x85, 0x92, 0xf8, 0xd5, 0x74,
-	0xff, 0x1b, 0x3a, 0xe1, 0xf5, 0x29, 0x36, 0x87, 0x6a, 0x09, 0x9c, 0xcd, 0x49, 0xaf, 0x2f, 0xde,
-	0xdf, 0x85, 0x42, 0xaf, 0xaf, 0xba, 0x56, 0xe8, 0xf5, 0xbd, 0x2f, 0x16, 0x38, 0xea, 0xe1, 0xf0,
-	0x3e, 0x94, 0x49, 0x92, 0x8c, 0xe7, 0x28, 0x56, 0x61, 0xbc, 0x03, 0x45, 0x51, 0x4e, 0x16, 0xc9,
-	0x28, 0x91, 0x21, 0x7c, 0x2c, 0x3b, 0x26, 0x9f, 0x4f, 0xcd, 0x5a, 0xce, 0xbb, 0x9a, 0x14, 0xef,
-	0xbb, 0x35, 0xcd, 0xc7, 0x96, 0xe9, 0xca, 0xc4, 0x68, 0x4d, 0x78, 0xc4, 0x0c, 0xed, 0x06, 0xc7,
-	0x7a, 0xce, 0xe4, 0x59, 0x60, 0xf6, 0x82, 0x98, 0x9d, 0xf0, 0xfd, 0x71, 0xd8, 0x6f, 0xd8, 0x84,
-	0x99, 0x7a, 0xf0, 0x1e, 0xb8, 0x64, 0x19, 0x55, 0x45, 0x99, 0x93, 0xf2, 0xe2, 0x2d, 0xa8, 0x76,
-	0x63, 0x16, 0x70, 0xd6, 0xdf, 0xe0, 0x8d, 0x92, 0x4c, 0x99, 0x3a, 0x44, 0x74, 0x7f, 0xd8, 0x57,
-	0xd1, 0x32, 0x45, 0x8d, 0xc3, 0xe3, 0xfa, 0xfd, 0xb0, 0x09, 0x15, 0x3a, 0x19, 0xfd, 0xc6, 0xce,
-	0x55, 0x3f, 0x53, 0xd5, 0x3e, 0xb7, 0x6a, 0x31, 0x5d, 0xf5, 0xaf, 0x45, 0xdd, 0xc0, 0x1b, 0x50,
-	0x16, 0xbf, 0xa6, 0xa4, 0xb2, 0x72, 0x0b, 0x26, 0x05, 0xda, 0x29, 0x81, 0x8b, 0x50, 0xda, 0x8b,
-	0xc3, 0x03, 0x26, 0x4b, 0x15, 0x7c, 0x32, 0x52, 0x4d, 0x29, 0x65, 0x9a, 0xe2, 0x41, 0x4d, 0x5b,
-	0xb2, 0x1a, 0xbd, 0xce, 0x8c, 0x6f, 0xf6, 0x9a, 0xce, 0xb9, 0xd7, 0xac, 0xa4, 0xae, 0xd9, 0xf9,
-	0x59, 0x06, 0x57, 0x0d, 0xea, 0x3b, 0xda, 0x95, 0xb8, 0x06, 0x2e, 0xa1, 0x4d, 0xf7, 0xb2, 0x33,
-	0xd6, 0xcc, 0xba, 0xf0, 0x29, 0xd4, 0x08, 0xa7, 0xba, 0x95, 0x9e, 0xf3, 0x66, 0xda, 0x81, 0x0f,
-	0x01, 0x08, 0x21, 0x1f, 0x7a, 0x76, 0xe0, 0x9b, 0xb3, 0x26, 0x76, 0x60, 0x61, 0x9b, 0x4d, 0x07,
-	0x6a, 0xba, 0xa8, 0xd4, 0x9f, 0x60, 0x9e, 0xa2, 0x36, 0x54, 0xb7, 0x19, 0x57, 0xc5, 0xb2, 0x88,
-	0x1c, 0x3d, 0xce, 0x36, 0xe3, 0xb2, 0x5c, 0x36, 0x3b, 0xa5, 0xa7, 0x0d, 0x45, 0xb1, 0x47, 0xf0,
-	0x5a, 0xce, 0xae, 0x4f, 0x68, 0x31, 0xbb, 0xf6, 0x15, 0xed, 0x9d, 0x9c, 0x0b, 0xa8, 0x1d, 0xde,
-	0x5c, 0xca, 0x80, 0x4c, 0xf2, 0x0b, 0xfa, 0x32, 0x65, 0x6e, 0xa2, 0xa1, 0x37, 0x33, 0x50, 0x95,
-	0xba, 0x4a, 0xdb, 0x3e, 0x75, 0x25, 0x0d, 0xbb, 0x9e, 0x81, 0xc9, 0xc4, 0x35, 0x70, 0x69, 0x40,
-	0x2e, 0x3f, 0x00, 0x84, 0xbb, 0xcc, 0x00, 0x10, 0xe2, 0x02, 0x03, 0xb0, 0x06, 0xee, 0x6b, 0x36,
-	0x60, 0x09, 0x55, 0xd9, 0x1e, 0xa1, 0xf1, 0x98, 0xcf, 0x3a, 0x3e, 0x87, 0x1a, 0xe1, 0xe6, 0xce,
-	0x41, 0x1e, 0xaa, 0x03, 0x40, 0xa8, 0x39, 0xd3, 0x90, 0x83, 0xd9, 0xac, 0xff, 0x38, 0x6b, 0x59,
-	0xbf, 0xce, 0x5a, 0xd6, 0xef, 0xb3, 0x96, 0xf5, 0xf5, 0x4f, 0xeb, 0xbf, 0x8f, 0x65, 0xf9, 0xff,
-	0xc6, 0xea, 0xbf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x2f, 0xbf, 0xca, 0x27, 0x90, 0x08, 0x00, 0x00,
+	// 713 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x55, 0xcf, 0x6e, 0xd3, 0x4c,
+	0x10, 0xff, 0x1c, 0x27, 0x71, 0x32, 0xc9, 0x67, 0xc2, 0xaa, 0x40, 0x6a, 0x41, 0xd4, 0x1a, 0x09,
+	0x4a, 0x25, 0x42, 0x49, 0x51, 0x8b, 0xda, 0x53, 0x1b, 0x4a, 0x15, 0xa9, 0x42, 0xc5, 0xa8, 0x27,
+	0x0e, 0xc8, 0x34, 0xab, 0x62, 0x35, 0xad, 0x83, 0xbd, 0xa9, 0xe4, 0x3b, 0x0f, 0xc1, 0x85, 0x77,
+	0xe0, 0x19, 0x38, 0x71, 0xe4, 0x11, 0x50, 0xe1, 0x41, 0xd0, 0xee, 0xec, 0x6e, 0x1c, 0xdb, 0xa9,
+	0xda, 0x93, 0xe7, 0xff, 0xef, 0x37, 0x33, 0xeb, 0x5d, 0x78, 0x70, 0xec, 0x33, 0x7f, 0x14, 0x9e,
+	0x7c, 0x88, 0x69, 0x74, 0x11, 0x1c, 0xd3, 0x67, 0x52, 0xef, 0x8e, 0xa3, 0x90, 0x85, 0xc4, 0x92,
+	0xaa, 0xdb, 0x80, 0xfa, 0xde, 0xd9, 0x98, 0x25, 0x1e, 0x8d, 0xc7, 0xee, 0x3a, 0x58, 0x07, 0x41,
+	0xcc, 0x3c, 0xfa, 0x99, 0x10, 0x28, 0x1f, 0xfa, 0x27, 0xb4, 0x6d, 0x2c, 0x19, 0x2b, 0xa6, 0x27,
+	0x64, 0xb2, 0x00, 0x95, 0x83, 0xe0, 0x2c, 0x60, 0xed, 0x92, 0x30, 0xa2, 0xe2, 0x7e, 0x37, 0xa0,
+	0xc1, 0xb3, 0x76, 0xc3, 0xf0, 0xf4, 0x46, 0x99, 0x64, 0x1b, 0xac, 0xd7, 0xc1, 0x88, 0xd1, 0x28,
+	0x6e, 0x9b, 0x4b, 0xe6, 0x4a, 0xa3, 0xb7, 0xdc, 0x55, 0x2c, 0x53, 0x05, 0xbb, 0x32, 0x66, 0xef,
+	0x9c, 0x45, 0x89, 0xa7, 0x32, 0x9c, 0x2d, 0x68, 0xa6, 0x1d, 0xa4, 0x05, 0xe6, 0x29, 0x4d, 0x04,
+	0x6a, 0xdd, 0xe3, 0x22, 0x07, 0xbd, 0xf0, 0x47, 0x13, 0x2a, 0x40, 0xeb, 0x1e, 0x2a, 0x5b, 0xa5,
+	0x97, 0x86, 0xfb, 0x1e, 0x5a, 0xd8, 0x67, 0x3c, 0xee, 0xfb, 0x8c, 0x9e, 0x84, 0x51, 0x42, 0x9e,
+	0x03, 0x48, 0x39, 0xa0, 0x71, 0xdb, 0x10, 0x7c, 0x6e, 0x6b, 0x3e, 0x2a, 0xcc, 0x4b, 0x05, 0x71,
+	0x80, 0x7e, 0x38, 0x39, 0xd7, 0x5d, 0x09, 0xc5, 0x7d, 0x0b, 0xb6, 0x2a, 0xbe, 0x33, 0x61, 0x9f,
+	0xc2, 0x88, 0x3c, 0x01, 0x0b, 0x25, 0x55, 0xf7, 0x96, 0xae, 0x8b, 0x76, 0x4f, 0xf9, 0xe7, 0x94,
+	0x1c, 0x40, 0x53, 0x95, 0xe4, 0x43, 0x21, 0x0f, 0xa1, 0xc2, 0xbf, 0xaa, 0xdc, 0xff, 0xba, 0x9c,
+	0x18, 0x19, 0xfa, 0xe6, 0x94, 0x5a, 0x04, 0x6b, 0x37, 0x19, 0x0c, 0xf9, 0xa2, 0x6c, 0x28, 0x0d,
+	0x86, 0x72, 0x60, 0xa5, 0xc1, 0xd0, 0xfd, 0x62, 0x80, 0xd5, 0xc7, 0x42, 0xe4, 0x31, 0x54, 0x91,
+	0x92, 0xf0, 0x17, 0x30, 0x96, 0x6e, 0xb2, 0x0c, 0x65, 0x0e, 0x27, 0x40, 0x72, 0x4c, 0x84, 0x8b,
+	0x3c, 0x85, 0x9a, 0x1a, 0x9f, 0xdc, 0x73, 0xc1, 0x5c, 0x75, 0x88, 0xfb, 0xc3, 0x98, 0xc6, 0x93,
+	0x8e, 0xde, 0x4a, 0xa2, 0xb9, 0xa6, 0x2c, 0xfc, 0xb0, 0xbd, 0xf1, 0xcf, 0xd4, 0x8a, 0x85, 0xcc,
+	0x73, 0x0e, 0xfd, 0x88, 0x9e, 0xb3, 0xa3, 0x49, 0x30, 0x6c, 0x9b, 0x98, 0x33, 0xb5, 0x90, 0x47,
+	0x60, 0xa3, 0xa6, 0x59, 0x95, 0x45, 0x4c, 0xc6, 0x4a, 0xee, 0x43, 0xbd, 0x1f, 0x51, 0x9f, 0xd1,
+	0xe1, 0x0e, 0x6b, 0x57, 0x44, 0xc8, 0xd4, 0xc0, 0xbd, 0x47, 0xe3, 0xa1, 0xf4, 0x56, 0xd1, 0xab,
+	0x0d, 0x2e, 0x53, 0xf3, 0x23, 0x0e, 0xd4, 0x50, 0xd2, 0xfc, 0xb5, 0x5e, 0xc8, 0x7e, 0x06, 0xd5,
+	0xbc, 0x12, 0xb5, 0x9c, 0x45, 0xfd, 0x6b, 0xe0, 0x36, 0xc8, 0x5d, 0xa8, 0xf2, 0xaf, 0x86, 0x94,
+	0x5a, 0x21, 0x60, 0x9a, 0xa0, 0x99, 0x21, 0xb8, 0x00, 0x95, 0xc3, 0x28, 0x38, 0xa6, 0x02, 0xaa,
+	0xe4, 0xa1, 0x92, 0x59, 0x4a, 0x25, 0xb7, 0x14, 0x17, 0x9a, 0x4a, 0x13, 0x68, 0x38, 0x9d, 0x19,
+	0xdb, 0x6c, 0x9b, 0xd6, 0x95, 0x6d, 0xd6, 0x32, 0x6d, 0xf6, 0xbe, 0x55, 0xc1, 0x96, 0x07, 0xf5,
+	0x1d, 0xde, 0x6e, 0x64, 0x03, 0x6c, 0xcc, 0xd6, 0xdb, 0xcb, 0x9f, 0x31, 0x27, 0x6f, 0x22, 0x3d,
+	0x68, 0xec, 0xd3, 0xe9, 0xca, 0x5b, 0xd3, 0xf3, 0x8b, 0x3f, 0x49, 0x51, 0xce, 0x36, 0xfe, 0x8d,
+	0x05, 0x49, 0xf2, 0xf2, 0x74, 0x16, 0x33, 0x96, 0xd4, 0x35, 0xb3, 0x01, 0x36, 0x36, 0x72, 0x43,
+	0xa2, 0x1b, 0x60, 0xbf, 0xa2, 0x23, 0x9a, 0xca, 0xcb, 0x73, 0x25, 0xda, 0xa2, 0xaf, 0x74, 0xb2,
+	0x06, 0x4d, 0x1c, 0x8c, 0x3c, 0x8e, 0xd9, 0x1f, 0xd9, 0xc9, 0x1a, 0x48, 0x17, 0xea, 0xfb, 0x94,
+	0x49, 0x25, 0x0f, 0x92, 0x8b, 0xdf, 0x04, 0xe0, 0x5d, 0xe6, 0x12, 0xd4, 0x30, 0xee, 0xe5, 0x86,
+	0x21, 0x43, 0xd7, 0xa0, 0x89, 0xa3, 0xb8, 0x36, 0xb5, 0x17, 0xd0, 0xc4, 0x21, 0xcc, 0x65, 0x57,
+	0x34, 0x82, 0x55, 0x00, 0x1c, 0x81, 0xf8, 0x35, 0x66, 0xaf, 0x28, 0x67, 0x56, 0x25, 0xab, 0x60,
+	0xed, 0x53, 0xf1, 0xf2, 0x14, 0x14, 0xcf, 0xc4, 0x6e, 0x42, 0x4d, 0x3d, 0x53, 0x64, 0xa1, 0xe8,
+	0xe5, 0x72, 0xee, 0xe4, 0x5a, 0x97, 0x20, 0x80, 0x8d, 0x5f, 0x83, 0x50, 0x0f, 0x00, 0x5b, 0x9e,
+	0xc3, 0xa9, 0xa0, 0xe1, 0xdd, 0xd6, 0xcf, 0xcb, 0x8e, 0xf1, 0xeb, 0xb2, 0x63, 0xfc, 0xbe, 0xec,
+	0x18, 0x5f, 0xff, 0x74, 0xfe, 0xfb, 0x58, 0x15, 0xaf, 0xfe, 0xfa, 0xbf, 0x00, 0x00, 0x00, 0xff,
+	0xff, 0xcc, 0x13, 0x2a, 0x93, 0x16, 0x08, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -856,20 +799,19 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type CatalogServiceClient interface {
 	CreateCategory(ctx context.Context, in *Category, opts ...grpc.CallOption) (*Category, error)
-	CreateAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*Author, error)
-	CreateBook(ctx context.Context, in *Book, opts ...grpc.CallOption) (*Book, error)
 	GetCategory(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*Category, error)
-	GetAuthor(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*Author, error)
-	GetBook(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*Book, error)
-	List(ctx context.Context, in *ListFilter, opts ...grpc.CallOption) (*ListResp, error)
 	ListCategory(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRespCategory, error)
-	ListAuthor(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRespAuthor, error)
-	ListBook(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRespBook, error)
 	UpdateCategory(ctx context.Context, in *Category, opts ...grpc.CallOption) (*Category, error)
-	UpdateAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*Author, error)
-	UpdateBook(ctx context.Context, in *Book, opts ...grpc.CallOption) (*Book, error)
 	DeleteCategory(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*EmptyResp, error)
+	CreateAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*Author, error)
+	GetAuthor(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*Author, error)
+	ListAuthor(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRespAuthor, error)
+	UpdateAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*Author, error)
 	DeleteAuthor(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*EmptyResp, error)
+	CreateBook(ctx context.Context, in *Book, opts ...grpc.CallOption) (*Book, error)
+	GetBook(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*Book, error)
+	ListBook(ctx context.Context, in *ListBookReq, opts ...grpc.CallOption) (*ListRespBook, error)
+	UpdateBook(ctx context.Context, in *Book, opts ...grpc.CallOption) (*Book, error)
 	DeleteBook(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*EmptyResp, error)
 }
 
@@ -890,54 +832,9 @@ func (c *catalogServiceClient) CreateCategory(ctx context.Context, in *Category,
 	return out, nil
 }
 
-func (c *catalogServiceClient) CreateAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*Author, error) {
-	out := new(Author)
-	err := c.cc.Invoke(ctx, "/catalog.CatalogService/CreateAuthor", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *catalogServiceClient) CreateBook(ctx context.Context, in *Book, opts ...grpc.CallOption) (*Book, error) {
-	out := new(Book)
-	err := c.cc.Invoke(ctx, "/catalog.CatalogService/CreateBook", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *catalogServiceClient) GetCategory(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*Category, error) {
 	out := new(Category)
 	err := c.cc.Invoke(ctx, "/catalog.CatalogService/GetCategory", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *catalogServiceClient) GetAuthor(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*Author, error) {
-	out := new(Author)
-	err := c.cc.Invoke(ctx, "/catalog.CatalogService/GetAuthor", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *catalogServiceClient) GetBook(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*Book, error) {
-	out := new(Book)
-	err := c.cc.Invoke(ctx, "/catalog.CatalogService/GetBook", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *catalogServiceClient) List(ctx context.Context, in *ListFilter, opts ...grpc.CallOption) (*ListResp, error) {
-	out := new(ListResp)
-	err := c.cc.Invoke(ctx, "/catalog.CatalogService/List", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -953,45 +850,9 @@ func (c *catalogServiceClient) ListCategory(ctx context.Context, in *ListReq, op
 	return out, nil
 }
 
-func (c *catalogServiceClient) ListAuthor(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRespAuthor, error) {
-	out := new(ListRespAuthor)
-	err := c.cc.Invoke(ctx, "/catalog.CatalogService/ListAuthor", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *catalogServiceClient) ListBook(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRespBook, error) {
-	out := new(ListRespBook)
-	err := c.cc.Invoke(ctx, "/catalog.CatalogService/ListBook", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *catalogServiceClient) UpdateCategory(ctx context.Context, in *Category, opts ...grpc.CallOption) (*Category, error) {
 	out := new(Category)
 	err := c.cc.Invoke(ctx, "/catalog.CatalogService/UpdateCategory", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *catalogServiceClient) UpdateAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*Author, error) {
-	out := new(Author)
-	err := c.cc.Invoke(ctx, "/catalog.CatalogService/UpdateAuthor", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *catalogServiceClient) UpdateBook(ctx context.Context, in *Book, opts ...grpc.CallOption) (*Book, error) {
-	out := new(Book)
-	err := c.cc.Invoke(ctx, "/catalog.CatalogService/UpdateBook", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1007,9 +868,81 @@ func (c *catalogServiceClient) DeleteCategory(ctx context.Context, in *ByIdReq, 
 	return out, nil
 }
 
+func (c *catalogServiceClient) CreateAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*Author, error) {
+	out := new(Author)
+	err := c.cc.Invoke(ctx, "/catalog.CatalogService/CreateAuthor", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *catalogServiceClient) GetAuthor(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*Author, error) {
+	out := new(Author)
+	err := c.cc.Invoke(ctx, "/catalog.CatalogService/GetAuthor", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *catalogServiceClient) ListAuthor(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRespAuthor, error) {
+	out := new(ListRespAuthor)
+	err := c.cc.Invoke(ctx, "/catalog.CatalogService/ListAuthor", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *catalogServiceClient) UpdateAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*Author, error) {
+	out := new(Author)
+	err := c.cc.Invoke(ctx, "/catalog.CatalogService/UpdateAuthor", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *catalogServiceClient) DeleteAuthor(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*EmptyResp, error) {
 	out := new(EmptyResp)
 	err := c.cc.Invoke(ctx, "/catalog.CatalogService/DeleteAuthor", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *catalogServiceClient) CreateBook(ctx context.Context, in *Book, opts ...grpc.CallOption) (*Book, error) {
+	out := new(Book)
+	err := c.cc.Invoke(ctx, "/catalog.CatalogService/CreateBook", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *catalogServiceClient) GetBook(ctx context.Context, in *ByIdReq, opts ...grpc.CallOption) (*Book, error) {
+	out := new(Book)
+	err := c.cc.Invoke(ctx, "/catalog.CatalogService/GetBook", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *catalogServiceClient) ListBook(ctx context.Context, in *ListBookReq, opts ...grpc.CallOption) (*ListRespBook, error) {
+	out := new(ListRespBook)
+	err := c.cc.Invoke(ctx, "/catalog.CatalogService/ListBook", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *catalogServiceClient) UpdateBook(ctx context.Context, in *Book, opts ...grpc.CallOption) (*Book, error) {
+	out := new(Book)
+	err := c.cc.Invoke(ctx, "/catalog.CatalogService/UpdateBook", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1028,20 +961,19 @@ func (c *catalogServiceClient) DeleteBook(ctx context.Context, in *ByIdReq, opts
 // CatalogServiceServer is the server API for CatalogService service.
 type CatalogServiceServer interface {
 	CreateCategory(context.Context, *Category) (*Category, error)
-	CreateAuthor(context.Context, *Author) (*Author, error)
-	CreateBook(context.Context, *Book) (*Book, error)
 	GetCategory(context.Context, *ByIdReq) (*Category, error)
-	GetAuthor(context.Context, *ByIdReq) (*Author, error)
-	GetBook(context.Context, *ByIdReq) (*Book, error)
-	List(context.Context, *ListFilter) (*ListResp, error)
 	ListCategory(context.Context, *ListReq) (*ListRespCategory, error)
-	ListAuthor(context.Context, *ListReq) (*ListRespAuthor, error)
-	ListBook(context.Context, *ListReq) (*ListRespBook, error)
 	UpdateCategory(context.Context, *Category) (*Category, error)
-	UpdateAuthor(context.Context, *Author) (*Author, error)
-	UpdateBook(context.Context, *Book) (*Book, error)
 	DeleteCategory(context.Context, *ByIdReq) (*EmptyResp, error)
+	CreateAuthor(context.Context, *Author) (*Author, error)
+	GetAuthor(context.Context, *ByIdReq) (*Author, error)
+	ListAuthor(context.Context, *ListReq) (*ListRespAuthor, error)
+	UpdateAuthor(context.Context, *Author) (*Author, error)
 	DeleteAuthor(context.Context, *ByIdReq) (*EmptyResp, error)
+	CreateBook(context.Context, *Book) (*Book, error)
+	GetBook(context.Context, *ByIdReq) (*Book, error)
+	ListBook(context.Context, *ListBookReq) (*ListRespBook, error)
+	UpdateBook(context.Context, *Book) (*Book, error)
 	DeleteBook(context.Context, *ByIdReq) (*EmptyResp, error)
 }
 
@@ -1052,47 +984,44 @@ type UnimplementedCatalogServiceServer struct {
 func (*UnimplementedCatalogServiceServer) CreateCategory(ctx context.Context, req *Category) (*Category, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCategory not implemented")
 }
-func (*UnimplementedCatalogServiceServer) CreateAuthor(ctx context.Context, req *Author) (*Author, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateAuthor not implemented")
-}
-func (*UnimplementedCatalogServiceServer) CreateBook(ctx context.Context, req *Book) (*Book, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateBook not implemented")
-}
 func (*UnimplementedCatalogServiceServer) GetCategory(ctx context.Context, req *ByIdReq) (*Category, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCategory not implemented")
-}
-func (*UnimplementedCatalogServiceServer) GetAuthor(ctx context.Context, req *ByIdReq) (*Author, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAuthor not implemented")
-}
-func (*UnimplementedCatalogServiceServer) GetBook(ctx context.Context, req *ByIdReq) (*Book, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetBook not implemented")
-}
-func (*UnimplementedCatalogServiceServer) List(ctx context.Context, req *ListFilter) (*ListResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
 }
 func (*UnimplementedCatalogServiceServer) ListCategory(ctx context.Context, req *ListReq) (*ListRespCategory, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListCategory not implemented")
 }
-func (*UnimplementedCatalogServiceServer) ListAuthor(ctx context.Context, req *ListReq) (*ListRespAuthor, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListAuthor not implemented")
-}
-func (*UnimplementedCatalogServiceServer) ListBook(ctx context.Context, req *ListReq) (*ListRespBook, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListBook not implemented")
-}
 func (*UnimplementedCatalogServiceServer) UpdateCategory(ctx context.Context, req *Category) (*Category, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCategory not implemented")
-}
-func (*UnimplementedCatalogServiceServer) UpdateAuthor(ctx context.Context, req *Author) (*Author, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthor not implemented")
-}
-func (*UnimplementedCatalogServiceServer) UpdateBook(ctx context.Context, req *Book) (*Book, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateBook not implemented")
 }
 func (*UnimplementedCatalogServiceServer) DeleteCategory(ctx context.Context, req *ByIdReq) (*EmptyResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCategory not implemented")
 }
+func (*UnimplementedCatalogServiceServer) CreateAuthor(ctx context.Context, req *Author) (*Author, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAuthor not implemented")
+}
+func (*UnimplementedCatalogServiceServer) GetAuthor(ctx context.Context, req *ByIdReq) (*Author, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAuthor not implemented")
+}
+func (*UnimplementedCatalogServiceServer) ListAuthor(ctx context.Context, req *ListReq) (*ListRespAuthor, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAuthor not implemented")
+}
+func (*UnimplementedCatalogServiceServer) UpdateAuthor(ctx context.Context, req *Author) (*Author, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthor not implemented")
+}
 func (*UnimplementedCatalogServiceServer) DeleteAuthor(ctx context.Context, req *ByIdReq) (*EmptyResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAuthor not implemented")
+}
+func (*UnimplementedCatalogServiceServer) CreateBook(ctx context.Context, req *Book) (*Book, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBook not implemented")
+}
+func (*UnimplementedCatalogServiceServer) GetBook(ctx context.Context, req *ByIdReq) (*Book, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBook not implemented")
+}
+func (*UnimplementedCatalogServiceServer) ListBook(ctx context.Context, req *ListBookReq) (*ListRespBook, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListBook not implemented")
+}
+func (*UnimplementedCatalogServiceServer) UpdateBook(ctx context.Context, req *Book) (*Book, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateBook not implemented")
 }
 func (*UnimplementedCatalogServiceServer) DeleteBook(ctx context.Context, req *ByIdReq) (*EmptyResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteBook not implemented")
@@ -1120,42 +1049,6 @@ func _CatalogService_CreateCategory_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CatalogService_CreateAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Author)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CatalogServiceServer).CreateAuthor(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/catalog.CatalogService/CreateAuthor",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CatalogServiceServer).CreateAuthor(ctx, req.(*Author))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _CatalogService_CreateBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Book)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CatalogServiceServer).CreateBook(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/catalog.CatalogService/CreateBook",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CatalogServiceServer).CreateBook(ctx, req.(*Book))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _CatalogService_GetCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ByIdReq)
 	if err := dec(in); err != nil {
@@ -1170,60 +1063,6 @@ func _CatalogService_GetCategory_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CatalogServiceServer).GetCategory(ctx, req.(*ByIdReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _CatalogService_GetAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ByIdReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CatalogServiceServer).GetAuthor(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/catalog.CatalogService/GetAuthor",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CatalogServiceServer).GetAuthor(ctx, req.(*ByIdReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _CatalogService_GetBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ByIdReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CatalogServiceServer).GetBook(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/catalog.CatalogService/GetBook",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CatalogServiceServer).GetBook(ctx, req.(*ByIdReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _CatalogService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListFilter)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CatalogServiceServer).List(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/catalog.CatalogService/List",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CatalogServiceServer).List(ctx, req.(*ListFilter))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1246,42 +1085,6 @@ func _CatalogService_ListCategory_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CatalogService_ListAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CatalogServiceServer).ListAuthor(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/catalog.CatalogService/ListAuthor",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CatalogServiceServer).ListAuthor(ctx, req.(*ListReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _CatalogService_ListBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CatalogServiceServer).ListBook(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/catalog.CatalogService/ListBook",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CatalogServiceServer).ListBook(ctx, req.(*ListReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _CatalogService_UpdateCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Category)
 	if err := dec(in); err != nil {
@@ -1296,42 +1099,6 @@ func _CatalogService_UpdateCategory_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CatalogServiceServer).UpdateCategory(ctx, req.(*Category))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _CatalogService_UpdateAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Author)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CatalogServiceServer).UpdateAuthor(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/catalog.CatalogService/UpdateAuthor",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CatalogServiceServer).UpdateAuthor(ctx, req.(*Author))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _CatalogService_UpdateBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Book)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CatalogServiceServer).UpdateBook(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/catalog.CatalogService/UpdateBook",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CatalogServiceServer).UpdateBook(ctx, req.(*Book))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1354,6 +1121,78 @@ func _CatalogService_DeleteCategory_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CatalogService_CreateAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Author)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).CreateAuthor(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/catalog.CatalogService/CreateAuthor",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).CreateAuthor(ctx, req.(*Author))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CatalogService_GetAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ByIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).GetAuthor(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/catalog.CatalogService/GetAuthor",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).GetAuthor(ctx, req.(*ByIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CatalogService_ListAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).ListAuthor(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/catalog.CatalogService/ListAuthor",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).ListAuthor(ctx, req.(*ListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CatalogService_UpdateAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Author)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).UpdateAuthor(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/catalog.CatalogService/UpdateAuthor",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).UpdateAuthor(ctx, req.(*Author))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _CatalogService_DeleteAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ByIdReq)
 	if err := dec(in); err != nil {
@@ -1368,6 +1207,78 @@ func _CatalogService_DeleteAuthor_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CatalogServiceServer).DeleteAuthor(ctx, req.(*ByIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CatalogService_CreateBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Book)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).CreateBook(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/catalog.CatalogService/CreateBook",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).CreateBook(ctx, req.(*Book))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CatalogService_GetBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ByIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).GetBook(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/catalog.CatalogService/GetBook",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).GetBook(ctx, req.(*ByIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CatalogService_ListBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListBookReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).ListBook(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/catalog.CatalogService/ListBook",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).ListBook(ctx, req.(*ListBookReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CatalogService_UpdateBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Book)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).UpdateBook(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/catalog.CatalogService/UpdateBook",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).UpdateBook(ctx, req.(*Book))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1399,60 +1310,56 @@ var _CatalogService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _CatalogService_CreateCategory_Handler,
 		},
 		{
-			MethodName: "CreateAuthor",
-			Handler:    _CatalogService_CreateAuthor_Handler,
-		},
-		{
-			MethodName: "CreateBook",
-			Handler:    _CatalogService_CreateBook_Handler,
-		},
-		{
 			MethodName: "GetCategory",
 			Handler:    _CatalogService_GetCategory_Handler,
-		},
-		{
-			MethodName: "GetAuthor",
-			Handler:    _CatalogService_GetAuthor_Handler,
-		},
-		{
-			MethodName: "GetBook",
-			Handler:    _CatalogService_GetBook_Handler,
-		},
-		{
-			MethodName: "List",
-			Handler:    _CatalogService_List_Handler,
 		},
 		{
 			MethodName: "ListCategory",
 			Handler:    _CatalogService_ListCategory_Handler,
 		},
 		{
-			MethodName: "ListAuthor",
-			Handler:    _CatalogService_ListAuthor_Handler,
-		},
-		{
-			MethodName: "ListBook",
-			Handler:    _CatalogService_ListBook_Handler,
-		},
-		{
 			MethodName: "UpdateCategory",
 			Handler:    _CatalogService_UpdateCategory_Handler,
-		},
-		{
-			MethodName: "UpdateAuthor",
-			Handler:    _CatalogService_UpdateAuthor_Handler,
-		},
-		{
-			MethodName: "UpdateBook",
-			Handler:    _CatalogService_UpdateBook_Handler,
 		},
 		{
 			MethodName: "DeleteCategory",
 			Handler:    _CatalogService_DeleteCategory_Handler,
 		},
 		{
+			MethodName: "CreateAuthor",
+			Handler:    _CatalogService_CreateAuthor_Handler,
+		},
+		{
+			MethodName: "GetAuthor",
+			Handler:    _CatalogService_GetAuthor_Handler,
+		},
+		{
+			MethodName: "ListAuthor",
+			Handler:    _CatalogService_ListAuthor_Handler,
+		},
+		{
+			MethodName: "UpdateAuthor",
+			Handler:    _CatalogService_UpdateAuthor_Handler,
+		},
+		{
 			MethodName: "DeleteAuthor",
 			Handler:    _CatalogService_DeleteAuthor_Handler,
+		},
+		{
+			MethodName: "CreateBook",
+			Handler:    _CatalogService_CreateBook_Handler,
+		},
+		{
+			MethodName: "GetBook",
+			Handler:    _CatalogService_GetBook_Handler,
+		},
+		{
+			MethodName: "ListBook",
+			Handler:    _CatalogService_ListBook_Handler,
+		},
+		{
+			MethodName: "UpdateBook",
+			Handler:    _CatalogService_UpdateBook_Handler,
 		},
 		{
 			MethodName: "DeleteBook",
@@ -1486,62 +1393,6 @@ func (m *EmptyResp) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	if m.XXX_unrecognized != nil {
 		i -= len(m.XXX_unrecognized)
 		copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *ListFilter) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ListFilter) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *ListFilter) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i -= len(m.XXX_unrecognized)
-		copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	if len(m.Filters) > 0 {
-		for k := range m.Filters {
-			v := m.Filters[k]
-			baseI := i
-			i -= len(v)
-			copy(dAtA[i:], v)
-			i = encodeVarintCatalog(dAtA, i, uint64(len(v)))
-			i--
-			dAtA[i] = 0x12
-			i -= len(k)
-			copy(dAtA[i:], k)
-			i = encodeVarintCatalog(dAtA, i, uint64(len(k)))
-			i--
-			dAtA[i] = 0xa
-			i = encodeVarintCatalog(dAtA, i, uint64(baseI-i))
-			i--
-			dAtA[i] = 0x1a
-		}
-	}
-	if m.Limit != 0 {
-		i = encodeVarintCatalog(dAtA, i, uint64(m.Limit))
-		i--
-		dAtA[i] = 0x10
-	}
-	if m.Page != 0 {
-		i = encodeVarintCatalog(dAtA, i, uint64(m.Page))
-		i--
-		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
@@ -1583,7 +1434,7 @@ func (m *ListReq) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *ListResp) Marshal() (dAtA []byte, err error) {
+func (m *ListBookReq) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1593,12 +1444,12 @@ func (m *ListResp) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ListResp) MarshalTo(dAtA []byte) (int, error) {
+func (m *ListBookReq) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ListResp) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *ListBookReq) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1607,24 +1458,34 @@ func (m *ListResp) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i -= len(m.XXX_unrecognized)
 		copy(dAtA[i:], m.XXX_unrecognized)
 	}
-	if m.Count != 0 {
-		i = encodeVarintCatalog(dAtA, i, uint64(m.Count))
+	if len(m.Filters) > 0 {
+		for k := range m.Filters {
+			v := m.Filters[k]
+			baseI := i
+			i -= len(v)
+			copy(dAtA[i:], v)
+			i = encodeVarintCatalog(dAtA, i, uint64(len(v)))
+			i--
+			dAtA[i] = 0x12
+			i -= len(k)
+			copy(dAtA[i:], k)
+			i = encodeVarintCatalog(dAtA, i, uint64(len(k)))
+			i--
+			dAtA[i] = 0xa
+			i = encodeVarintCatalog(dAtA, i, uint64(baseI-i))
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if m.Limit != 0 {
+		i = encodeVarintCatalog(dAtA, i, uint64(m.Limit))
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.Catalogs) > 0 {
-		for iNdEx := len(m.Catalogs) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.Catalogs[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintCatalog(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0xa
-		}
+	if m.Page != 0 {
+		i = encodeVarintCatalog(dAtA, i, uint64(m.Page))
+		i--
+		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
@@ -2095,32 +1956,6 @@ func (m *EmptyResp) Size() (n int) {
 	return n
 }
 
-func (m *ListFilter) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.Page != 0 {
-		n += 1 + sovCatalog(uint64(m.Page))
-	}
-	if m.Limit != 0 {
-		n += 1 + sovCatalog(uint64(m.Limit))
-	}
-	if len(m.Filters) > 0 {
-		for k, v := range m.Filters {
-			_ = k
-			_ = v
-			mapEntrySize := 1 + len(k) + sovCatalog(uint64(len(k))) + 1 + len(v) + sovCatalog(uint64(len(v)))
-			n += mapEntrySize + 1 + sovCatalog(uint64(mapEntrySize))
-		}
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
 func (m *ListReq) Size() (n int) {
 	if m == nil {
 		return 0
@@ -2139,20 +1974,25 @@ func (m *ListReq) Size() (n int) {
 	return n
 }
 
-func (m *ListResp) Size() (n int) {
+func (m *ListBookReq) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.Catalogs) > 0 {
-		for _, e := range m.Catalogs {
-			l = e.Size()
-			n += 1 + l + sovCatalog(uint64(l))
-		}
+	if m.Page != 0 {
+		n += 1 + sovCatalog(uint64(m.Page))
 	}
-	if m.Count != 0 {
-		n += 1 + sovCatalog(uint64(m.Count))
+	if m.Limit != 0 {
+		n += 1 + sovCatalog(uint64(m.Limit))
+	}
+	if len(m.Filters) > 0 {
+		for k, v := range m.Filters {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + len(k) + sovCatalog(uint64(len(k))) + 1 + len(v) + sovCatalog(uint64(len(v)))
+			n += mapEntrySize + 1 + sovCatalog(uint64(mapEntrySize))
+		}
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -2429,7 +2269,7 @@ func (m *EmptyResp) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ListFilter) Unmarshal(dAtA []byte) error {
+func (m *ListReq) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2452,10 +2292,99 @@ func (m *ListFilter) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ListFilter: wiretype end group for non-group")
+			return fmt.Errorf("proto: ListReq: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ListFilter: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ListReq: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Page", wireType)
+			}
+			m.Page = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCatalog
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Page |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Limit", wireType)
+			}
+			m.Limit = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCatalog
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Limit |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCatalog(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthCatalog
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ListBookReq) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCatalog
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ListBookReq: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ListBookReq: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2623,199 +2552,6 @@ func (m *ListFilter) Unmarshal(dAtA []byte) error {
 			}
 			m.Filters[mapkey] = mapvalue
 			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipCatalog(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthCatalog
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *ListReq) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowCatalog
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ListReq: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ListReq: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Page", wireType)
-			}
-			m.Page = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowCatalog
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Page |= int64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Limit", wireType)
-			}
-			m.Limit = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowCatalog
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Limit |= int64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipCatalog(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthCatalog
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *ListResp) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowCatalog
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ListResp: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ListResp: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Catalogs", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowCatalog
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthCatalog
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthCatalog
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Catalogs = append(m.Catalogs, &Catalog{})
-			if err := m.Catalogs[len(m.Catalogs)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Count", wireType)
-			}
-			m.Count = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowCatalog
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Count |= int64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipCatalog(dAtA[iNdEx:])
