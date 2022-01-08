@@ -1,4 +1,3 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/goland,visualstudio,go
 # Edit at https://www.toptal.com/developers/gitignore?templates=goland,visualstudio,go
 
@@ -20,7 +19,7 @@
 # vendor/
 
 ### Go Patch ###
-vendor/
+*vendor/
 /Godeps/
 
 ### Goland ###
