@@ -56,15 +56,46 @@ func (r *bookRepo) GetBook(id string) (pb.Book, error) {
 		return pb.Book{}, err
 	}
 
-	err = r.db.QueryRow(`
-        select c.category_id, c.name
+	rows, err := r.db.Queryx(`
+		select c.category_id, c.name, c.parent_uuid, cat.name, c.created_at, c.updated_at
 			from book_categories
 		join books b on book_categories.book_id = b.book_id
 		join categories c on book_categories.category_id = c.category_id
-		where b.book_id = $1`, id).Scan(&book.CategoryId, &book.CategoryName)
+		left join categories as cat ON c.parent_uuid = cat.category_id
+		where b.book_id = $1`, id)
 	if err != nil {
 		return pb.Book{}, err
 	}
+
+	var (
+		categories     []*pb.Category
+		parentUUID     sql.NullString
+		parentCategory sql.NullString
+	)
+
+	for rows.Next() {
+		var category pb.Category
+		err = rows.Scan(&category.CategoryId, &category.Name, &parentUUID, &parentCategory, &category.CreatedAt, &category.UpdatedAt)
+		if err != nil {
+			return pb.Book{}, err
+		}
+
+		if !parentUUID.Valid {
+			parentUUID.String = ""
+		}
+		category.ParentUuid = parentUUID.String
+
+		if !parentCategory.Valid {
+			parentCategory.String = ""
+		}
+		category.ParentCategory = parentCategory.String
+
+		book.CategoryId = category.CategoryId
+
+		categories = append(categories, &category)
+	}
+
+	book.Categories = categories
 
 	return book, nil
 }
@@ -73,24 +104,23 @@ func (r *bookRepo) ListBook(page, limit int64, filters map[string]string) ([]*pb
 	offset := (page - 1) * limit
 
 	sb := sqlbuilder.NewSelectBuilder()
-	sb.Select("b.book_id", "b.name", "b.author_id", "b.price", "c.category_id", "c.name", "b.created_at", "b.updated_at")
-	sb.From("book_categories")
-	sb.Join("books b", "book_categories.book_id=b.book_id")
-	sb.Join("categories c", "book_categories.category_id=c.category_id")
 
+	sb.Select("book_categories.book_id")
+	sb.From("book_categories")
+	sb.GroupBy("book_categories.book_id")
 	if value, ok := filters["authors"]; ok {
 		args := utils.StringSliceToInterfaceSlice(utils.ParseFilter(value))
-		sb.Join("authors a", "b.author_id=a.author_id")
+		sb.JoinWithOption("LEFT", "authors a", "b.author_id=a.author_id")
 		sb.Where(sb.In("a.author_id", args...))
 	}
 
 	if value, ok := filters["category"]; ok {
+		sb.JoinWithOption("LEFT", "categories c", "c.category_id=book_categories.category_id")
 		sb.Where(sb.Equal("c.category_id", value))
 	}
 
 	sb.Limit(int(limit))
 	sb.Offset(int(offset))
-
 	query, args := sb.BuildWithFlavor(sqlbuilder.PostgreSQL)
 
 	rows, err := r.db.Queryx(query, args...)
@@ -108,35 +138,44 @@ func (r *bookRepo) ListBook(page, limit int64, filters map[string]string) ([]*pb
 	)
 
 	for rows.Next() {
-		var book pb.Book
-		err = rows.Scan(&book.BookId, &book.Name, &book.AuthorId, &book.Price, &book.CategoryId, &book.CategoryName, &book.CreatedAt, &book.UpdatedAt)
+		var byId pb.ByIdReq
+		err = rows.Scan(&byId.Id)
 		if err != nil {
 			return nil, 0, err
 		}
+		book, _ := r.GetBook(byId.Id)
 		books = append(books, &book)
 	}
 
 	sbc := sqlbuilder.NewSelectBuilder()
+
 	sbc.Select("count(*)")
 	sbc.From("book_categories")
-	sbc.Join("books b", "book_categories.book_id=b.book_id")
-	sbc.Join("categories c", "book_categories.category_id=c.category_id")
-
+	sbc.GroupBy("book_categories.book_id")
 	if value, ok := filters["authors"]; ok {
-		elements := utils.StringSliceToInterfaceSlice(utils.ParseFilter(value))
-		sbc.Join("authors a", "b.author_id=a.author_id")
-		sbc.Where(sbc.In("a.author_id", elements...))
+		args1 := utils.StringSliceToInterfaceSlice(utils.ParseFilter(value))
+		sbc.JoinWithOption("LEFT", "authors a", "b.author_id=a.author_id")
+		sbc.Where(sbc.In("a.author_id", args1...))
 	}
 
 	if value, ok := filters["category"]; ok {
+		sbc.JoinWithOption("LEFT", "categories c", "c.category_id=book_categories.category_id")
 		sbc.Where(sbc.Equal("c.category_id", value))
 	}
 
 	query, args = sbc.BuildWithFlavor(sqlbuilder.PostgreSQL)
 
-	err = r.db.QueryRow(query, args...).Scan(&count)
+	rows, err = r.db.Queryx(query, args...)
 	if err != nil {
 		return nil, 0, err
+	}
+	if err = rows.Err(); err != nil {
+		return nil, 0, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		count = count + 1
 	}
 
 	return books, count, nil
