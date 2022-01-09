@@ -22,6 +22,7 @@ func NewBookRepo(db *sqlx.DB) *bookRepo {
 
 func (r *bookRepo) CreateBook(book pb.Book) (pb.Book, error) {
 	var id string
+	allId := utils.ParseFilter(book.CategoryId)
 	err := r.db.QueryRow(`
         INSERT INTO books(book_id, name, author_id, price, created_at, updated_at)
         VALUES ($1, $2, $3, $4, $5, $6) returning book_id`, book.BookId, book.Name, book.AuthorId, book.Price, time.Now().UTC(), time.Now().UTC()).Scan(&id)
@@ -29,11 +30,13 @@ func (r *bookRepo) CreateBook(book pb.Book) (pb.Book, error) {
 		return pb.Book{}, err
 	}
 
-	_, err = r.db.Exec(`
+	for _, j := range allId {
+		_, err = r.db.Exec(`
         INSERT INTO book_categories(book_id, category_id)
-        VALUES ($1, $2)`, book.BookId, book.CategoryId)
-	if err != nil {
-		return pb.Book{}, err
+        VALUES ($1, $2)`, book.BookId, j)
+		if err != nil {
+			return pb.Book{}, err
+		}
 	}
 
 	var NewBook pb.Book
@@ -107,10 +110,11 @@ func (r *bookRepo) ListBook(page, limit int64, filters map[string]string) ([]*pb
 
 	sb.Select("book_categories.book_id")
 	sb.From("book_categories")
+	sb.JoinWithOption("LEFT", "books b", "book_categories.book_id=b.book_id")
 	sb.GroupBy("book_categories.book_id")
 	if value, ok := filters["authors"]; ok {
-		args := utils.StringSliceToInterfaceSlice(utils.ParseFilter(value))
 		sb.JoinWithOption("LEFT", "authors a", "b.author_id=a.author_id")
+		args := utils.StringSliceToInterfaceSlice(utils.ParseFilter(value))
 		sb.Where(sb.In("a.author_id", args...))
 	}
 
@@ -151,6 +155,7 @@ func (r *bookRepo) ListBook(page, limit int64, filters map[string]string) ([]*pb
 
 	sbc.Select("count(*)")
 	sbc.From("book_categories")
+	sbc.JoinWithOption("LEFT", "books b", "book_categories.book_id=b.book_id")
 	sbc.GroupBy("book_categories.book_id")
 	if value, ok := filters["authors"]; ok {
 		args1 := utils.StringSliceToInterfaceSlice(utils.ParseFilter(value))
