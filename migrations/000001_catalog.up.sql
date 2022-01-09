@@ -1,5 +1,5 @@
-BEGIN;
-CREATE TABLE IF NOT EXISTS categories(
+begin;
+create table if not exists categories(
     category_id uuid primary key,
     name varchar(64),
     parent_uuid uuid default null,
