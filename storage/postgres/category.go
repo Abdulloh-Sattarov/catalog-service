@@ -21,20 +21,14 @@ func NewCategoryRepo(db *sqlx.DB) *categoryRepo {
 
 func (r *categoryRepo) CreateCategory(category pb.Category) (pb.Category, error) {
 	var id string
-	if category.ParentUuid != "" {
-		err := r.db.QueryRow(`
-		INSERT INTO categories(category_id, name, parent_uuid, created_at, updated_at) 
-		VALUES ($1, $2, $3, $4, $5) returning category_id`, category.CategoryId, category.Name, category.ParentUuid, time.Now().UTC(), time.Now().UTC()).Scan(&id)
-		if err != nil {
-			return pb.Category{}, err
-		}
-	} else {
-		err := r.db.QueryRow(`
-		INSERT INTO categories(category_id, name, created_at, updated_at) 
-		VALUES ($1, $2, $3, $4) returning category_id`, category.CategoryId, category.Name, time.Now().UTC(), time.Now().UTC()).Scan(&id)
-		if err != nil {
-			return pb.Category{}, err
-		}
+
+	var parentID sql.NullString
+	parentID = stringToNullString(category.ParentUuid)
+	err := r.db.QueryRow(`
+	INSERT INTO categories(category_id, name, parent_uuid, created_at, updated_at) 
+	VALUES ($1, $2, $3, $4, $5) returning category_id`, category.CategoryId, category.Name, parentID, time.Now().UTC(), time.Now().UTC()).Scan(&id)
+	if err != nil {
+		return pb.Category{}, err
 	}
 
 	newCategory, err := r.GetCategory(id)
@@ -181,4 +175,14 @@ func (r *categoryRepo) DeleteCategory(id string) error {
 	}
 
 	return nil
+}
+
+func stringToNullString(s string) (ns sql.NullString) {
+	if s != "" {
+		ns.Valid = true
+		ns.String = s
+		return ns
+	}
+
+	return ns
 }
