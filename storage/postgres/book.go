@@ -22,7 +22,6 @@ func NewBookRepo(db *sqlx.DB) *bookRepo {
 
 func (r *bookRepo) CreateBook(book pb.Book) (pb.Book, error) {
 	var id string
-	allId := utils.ParseFilter(book.CategoryId)
 	err := r.db.QueryRow(`
         INSERT INTO books(book_id, name, author_id, price, created_at, updated_at)
         VALUES ($1, $2, $3, $4, $5, $6) returning book_id`, book.BookId, book.Name, book.AuthorId, book.Price, time.Now().UTC(), time.Now().UTC()).Scan(&id)
@@ -30,7 +29,7 @@ func (r *bookRepo) CreateBook(book pb.Book) (pb.Book, error) {
 		return pb.Book{}, err
 	}
 
-	for _, j := range allId {
+	for _, j := range book.CategoryId {
 		_, err = r.db.Exec(`
         INSERT INTO book_categories(book_id, category_id)
         VALUES ($1, $2)`, book.BookId, j)
@@ -93,7 +92,7 @@ func (r *bookRepo) GetBook(id string) (pb.Book, error) {
 		}
 		category.ParentCategory = parentCategory.String
 
-		book.CategoryId = category.CategoryId
+		book.CategoryId = append(book.CategoryId, category.CategoryId)
 
 		categories = append(categories, &category)
 	}
