@@ -20,10 +20,12 @@ func NewCategoryRepo(db *sqlx.DB) *categoryRepo {
 }
 
 func (r *categoryRepo) CreateCategory(category pb.Category) (pb.Category, error) {
-	var id string
-
-	var parentID sql.NullString
+	var (
+		parentID sql.NullString
+		id       string
+	)
 	parentID = stringToNullString(category.ParentUuid)
+
 	err := r.db.QueryRow(`
 	INSERT INTO categories(category_id, name, parent_uuid, created_at, updated_at) 
 	VALUES ($1, $2, $3, $4, $5) returning category_id`, category.CategoryId, category.Name, parentID, time.Now().UTC(), time.Now().UTC()).Scan(&id)
@@ -121,31 +123,24 @@ func (r *categoryRepo) ListCategory(page, limit int64) ([]*pb.Category, int64, e
 }
 
 func (r *categoryRepo) UpdateCategory(category pb.Category) (pb.Category, error) {
-	if category.ParentUuid != "" {
-		result, err := r.db.Exec(`UPDATE categories SET name=$1, parent_uuid=$2, updated_at = $3 WHERE category_id=$4 and deleted_at is null`,
-			category.Name, category.ParentUuid, time.Now().UTC(), category.CategoryId,
-		)
-		if err != nil {
-			return pb.Category{}, err
-		}
-		if i, _ := result.RowsAffected(); i == 0 {
-			return pb.Category{}, sql.ErrNoRows
-		}
-	} else {
-		result, err := r.db.Exec(`UPDATE categories SET name=$1, parent_uuid=null, updated_at = $2 WHERE category_id=$3 and deleted_at is null`,
-			category.Name, time.Now().UTC(), category.CategoryId,
-		)
-		if err != nil {
-			return pb.Category{}, err
-		}
-		if i, _ := result.RowsAffected(); i == 0 {
-			return pb.Category{}, sql.ErrNoRows
-		}
+	var (
+		parentID    sql.NullString
+		newCategory pb.Category
+	)
+
+	parentID = stringToNullString(category.ParentUuid)
+
+	result, err := r.db.Exec(`UPDATE categories SET name=$1, parent_uuid=$2, updated_at = $3 WHERE category_id=$4 and deleted_at is null`,
+		category.Name, parentID, time.Now().UTC(), category.CategoryId,
+	)
+	if err != nil {
+		return pb.Category{}, err
+	}
+	if i, _ := result.RowsAffected(); i == 0 {
+		return pb.Category{}, sql.ErrNoRows
 	}
 
-	var newCategory pb.Category
-
-	newCategory, err := r.GetCategory(category.CategoryId)
+	newCategory, err = r.GetCategory(category.CategoryId)
 	if err != nil {
 		return pb.Category{}, err
 	}
