@@ -197,15 +197,19 @@ func (r *bookRepo) UpdateBook(book pb.Book) (pb.Book, error) {
 		return pb.Book{}, sql.ErrNoRows
 	}
 
-	resultNext, err := r.db.Exec(`UPDATE book_categories SET category_id = $1 WHERE book_id=$2`,
-		book.CategoryId, book.BookId,
-	)
-	if err != nil {
-		return pb.Book{}, err
-	}
+	r.db.Exec("delete from book_categories where book_id = $1", book.BookId)
 
-	if i, _ := resultNext.RowsAffected(); i == 0 {
-		return pb.Book{}, sql.ErrNoRows
+	for _, j := range book.CategoryId {
+		resultNext, newError := r.db.Exec(`insert into book_categories(book_id, category_id) values($1, $2)`,
+			book.BookId, j,
+		)
+		if newError != nil {
+			return pb.Book{}, err
+		}
+
+		if i, _ := resultNext.RowsAffected(); i == 0 {
+			return pb.Book{}, sql.ErrNoRows
+		}
 	}
 
 	var NewBook pb.Book

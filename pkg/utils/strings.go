@@ -11,5 +11,6 @@ func StringSliceToInterfaceSlice(ss []string) []interface{} {
 	for i, v := range ss {
 		is[i] = v
 	}
+
 	return is
 }
